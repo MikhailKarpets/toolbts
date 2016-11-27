@@ -18,7 +18,6 @@ data_to_write = data['Description'][:3]
 f = open("F:\mygit\descr.txt","r")
 o = open("F:\\mygit\\text.txt",'w', newline="\r\n")
 for line in f:
-    print(line)
     o.write(line)
 o.close()
 f.close()
