@@ -17,13 +17,13 @@ def filter_pattern(arr_pattern, text):
     cleaned_text = text
     temp_str = text
     for i, pattern in enumerate(arr_pattern):
-        print('.')
+#        print('.')
         if pattern.search(temp_str):
-            pattern_declaration = 'PATTERN %d' % i  
-            print(pattern_declaration)
+#            pattern_declaration = 'PATTERN %d' % i  
+#            print(pattern_declaration)
             if ((i < 12) and (stack_trace_flag == 0)): #change i if number of stack-trace regex changes! 
                 stack_trace_flag = 1
-#            matches = pattern.findall(temp_str)
+            matches = pattern.findall(temp_str)
             temp_str = pattern.sub('', temp_str)
             cleaned_text = temp_str
 #            temp_str = " ".join(temp_str.split())
@@ -37,20 +37,20 @@ def filter_pattern(arr_pattern, text):
 #            print('|||||||||||||||||||||||||||||||END cleaned TEXT|||||||||||||||||||||||||||||')
 #            print()
 #            print()    
-    print()
-    print()
+#    print()
+#    print()
     print('|||||||||||||||||||||||||||||||BEGIN cleaned TEXT|||||||||||||||||||||||||||')
-    cleaned_text = " ".join(cleaned_text.split())
+#    cleaned_text = " ".join(cleaned_text.split())
     print(cleaned_text)
     print('|||||||||||||||||||||||||||||||END cleaned TEXT|||||||||||||||||||||||||||||')
-#    print()
-#    print()
+    print()
+    print()
     return [temp_str, stack_trace_flag]
 
 
 number_of_bug_descr = list()
 list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
-for i in range(1,4):
+for i in range(1,2):
     str_path = "F:\\mike\\hse\\exactpro\\all_projects\\JBoss%d.csv" % i
     data = pd.read_csv(str_path)
     data_description0 = data['Description'][1:]
@@ -89,28 +89,28 @@ for i in range(1,4):
 
     
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-#        if k < 597:
-#            continue
-#        if k == 598:
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            break
+        if k < 40:
+            continue
+        if k == 50:
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            print('|||||||||||||||||||||||||||||||||||||||||||')
+            break
         print('|||||||||||NUMBER OF TEXT||||||||||||')
         print(k)
         text = item[0]
 #        print('|||||||||||||||||||||||||||||||BEGIN TEXT with trash|||||||||||||||||||||||||||')
 #        print(text)
 #        print('|||||||||||||||||||||||||||||||END TEXT with trash|||||||||||||||||||||||||||')
-        print()
-        print()
+#        print()
+#        print()
         list_of_bugs_descriptions_and_stack_trace_flags[k] = filter_pattern(arr_patterns, text)  
     list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags + list_of_bugs_descriptions_and_stack_trace_flags
 #        print('-------------------THIS IS THE END-----------------------')
@@ -119,7 +119,7 @@ for i in range(1,4):
     print(len(list_of_bugs_descriptions_and_stack_trace_flags))
 
 
-print(list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags)
+#print(list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags)
 print('Number of all descriptions: ')
 print(len(list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags))
  
