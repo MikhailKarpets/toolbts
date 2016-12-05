@@ -10,31 +10,31 @@ import re
 
 
 def filter_pattern(arr_pattern, text):
-#    print('||||||||||||||||||||RAW TEXT|||||||||||||||||||||||')
-#    print(text)
-#    print('||||||||||||||||||||RAW TEXT|||||||||||||||||||||||')
-#    print()
+    print('||||||||||||||||||||RAW TEXT|||||||||||||||||||||||')
+    print(text)
+    print('||||||||||||||||||||RAW TEXT|||||||||||||||||||||||')
+    print()
     stack_trace_flag = 0
     temp_str = ' '
-#    cleaned_text = ' '
-#    cleaned_text = text
+    cleaned_text = ' '
+    cleaned_text = text
     temp_str = text
     for i, pattern in enumerate(arr_pattern):
 #        print('.')
         if pattern.search(temp_str):
-#            pattern_declaration = 'PATTERN %d' % i  
-#            print(pattern_declaration)
+            pattern_declaration = 'PATTERN %d' % i  
+            print(pattern_declaration)
             if ((i < 12) or (i == 17) or (i == 26)): #change i if number of stack-trace regex changes! 
                 stack_trace_flag = 1
-#            matches = pattern.findall(temp_str)
+            matches = pattern.findall(temp_str)
             temp_str = pattern.sub('', temp_str)
 #            cleaned_text = temp_str
 #            temp_str = " ".join(temp_str.split())
-#            print('|||||||||||||||||||||||||||||||BEGIN MATCHES||||||||||||||||||||||||||||||') #mt
-#            print(matches) #mt
-#            print('|||||||||||||||||||||||||||||||END MATCHES||||||||||||||||||||||||||||||||') #mt
-#            print() #mt
-#            print() #mt 
+            print('|||||||||||||||||||||||||||||||BEGIN MATCHES||||||||||||||||||||||||||||||') #mt
+            print(matches) #mt
+            print('|||||||||||||||||||||||||||||||END MATCHES||||||||||||||||||||||||||||||||') #mt
+            print() #mt
+            print() #mt 
 #            print('|||||||||||||||||||||||||||||||BEGIN cleaned TEXT|||||||||||||||||||||||||||')
 #            print(cleaned_text)
 #            print('|||||||||||||||||||||||||||||||END cleaned TEXT|||||||||||||||||||||||||||||')
@@ -42,12 +42,12 @@ def filter_pattern(arr_pattern, text):
 #            print()    
 #    print()
 #    print()
-#    print('|||||||||||||||||||||||||||||||BEGIN cleaned TEXT|||||||||||||||||||||||||||') #ct
+    print('|||||||||||||||||||||||||||||||BEGIN cleaned TEXT|||||||||||||||||||||||||||') #ct
 #    cleaned_text = " ".join(cleaned_text.split()) #for text 9 ONLY!!!
-#    print(cleaned_text) #ct
-#    print('|||||||||||||||||||||||||||||||END cleaned TEXT|||||||||||||||||||||||||||||') #ct
-#    print() #ct
-#    print() #ct
+    print(cleaned_text) #ct
+    print('|||||||||||||||||||||||||||||||END cleaned TEXT|||||||||||||||||||||||||||||') #ct
+    print() #ct
+    print() #ct
     temp_str = " ".join(temp_str.split())
     return [temp_str, stack_trace_flag]
 
@@ -135,9 +135,9 @@ for i in range(1,4):
     list_of_bugs_descriptions_and_stack_trace_flags = [list(x) for x in subset.values]
 #   
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-#        if k < 344:
+#        if k < 0:
 #            continue
-#        if k == 380:
+#        if k == 50:
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
@@ -149,10 +149,10 @@ for i in range(1,4):
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            break
-#        print('|||||||||||NUMBER OF TEXT||||||||||||')
-#        print(k)
-#        print('|||||||||||NUMBER OF TEXT||||||||||||')
-#        print()
+        print('|||||||||||NUMBER OF TEXT||||||||||||')
+        print(k)
+        print('|||||||||||NUMBER OF TEXT||||||||||||')
+        print()
         text = item[0]
 #        print('|||||||||||||||||||||||||||||||BEGIN TEXT with trash|||||||||||||||||||||||||||')
 #        print(text)
