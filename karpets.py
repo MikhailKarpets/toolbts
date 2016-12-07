@@ -21,7 +21,7 @@ def filter_pattern(arr_pattern, text):
     cleaned_text = text
     temp_str = text
     
-    pattern_a_lot_of_ERROR = re.compile('[0-9][0-9]:[0-9][0-9]:[0-9][0-9].*ERROR.*\\n.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9].*ERROR.*\\n.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9].*ERROR.*\\n.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9].*ERROR.*')
+    pattern_a_lot_of_ERROR = re.compile('.*ERROR.*\\n.*ERROR.*\\n.*ERROR.*\\n.*ERROR.*\\n.*ERROR.*\\n.*ERROR.*')
     if pattern_a_lot_of_ERROR.search(temp_str):
         pattern_declaration = 'PATTERN a lot of ERROR'  
         print(pattern_declaration)
@@ -164,8 +164,9 @@ pattern75 = re.compile('(?:(\\svolatile\\s)|(\\swhile\\s))')
 pattern76 = re.compile('(?:(\\strue\\s)|(\\sfalse\\s))')
 pattern77 = re.compile('\\snull\\s')
 
-#pattern78 = re.compile('\\s[a-zA-Z]\'\\s') #deleting words from one symbol
 pattern78 = re.compile('\'')
+pattern79 = re.compile('\\s[a-zA-Z]\\s') #deleting words from one symbol
+
 
 #нужно добавить шаблонов
 arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4, 
@@ -180,12 +181,13 @@ arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4,
                 pattern56, pattern57, pattern58, pattern59, pattern60, pattern61, pattern62,
                 pattern63, pattern64, pattern65, pattern66, pattern67, pattern68, pattern69,
                 pattern70, pattern71, pattern72, pattern73, pattern74, pattern75, pattern76,
-                pattern77, pattern78]
+                pattern77, pattern78, pattern79]
 
 number_of_bug_descr = list()
 list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
 
-for i in range(2,3):
+
+for i in range(1,4):
     str_path = "F:\\mike\\hse\\exactpro\\all_projects\\JBoss%d.csv" % i
     data = pd.read_csv(str_path)
     data_description0 = data['Description'][1:]
@@ -201,10 +203,9 @@ for i in range(2,3):
 #   
 
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-        if k < 98:
-            continue
-        if k == 101:
-            print('|||||||||||||||||||||||||||||||||||||||||||')
+#        if k < 60:
+#            continue
+#        if k == 70:
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
@@ -214,7 +215,8 @@ for i in range(2,3):
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
-            break
+#            print('|||||||||||||||||||||||||||||||||||||||||||')
+#            break
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
