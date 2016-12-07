@@ -20,15 +20,43 @@ def filter_pattern(arr_pattern, text):
     cleaned_text = ' '
     cleaned_text = text
     temp_str = text
+    
+    pattern_a_lot_of_ERROR = re.compile('[0-9][0-9]:[0-9][0-9]:[0-9][0-9].*ERROR.*\\n.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9].*ERROR.*\\n.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9].*ERROR.*\\n.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9].*ERROR.*')
+    if pattern_a_lot_of_ERROR.search(temp_str):
+        pattern_declaration = 'PATTERN a lot of ERROR'  
+        print(pattern_declaration)
+        stack_trace_flag = 1
+#        print('first if')
+        matches = pattern_a_lot_of_ERROR.findall(temp_str)
+        temp_str = pattern_a_lot_of_ERROR.sub(' ', temp_str)
+        cleaned_text = temp_str
+        print('|||||||||||||||||||||||||||||||BEGIN MATCHES||||||||||||||||||||||||||||||') #mt
+        print(matches) #mt
+        print('|||||||||||||||||||||||||||||||END MATCHES||||||||||||||||||||||||||||||||') #mt
+        print() #mt
+        print() #mt  
+            
+    
+    for i, pattern in enumerate(arr_pattern):
+        if ( ((i > 8) and (i <= 19)) or (i == 27) or (i == 35) or (i == 40) ):
+            if pattern.search(temp_str):
+                stack_trace_flag = 1
+                print('second if')
+                print(i)
+                
     for i, pattern in enumerate(arr_pattern):
 #        print('.')
         if pattern.search(temp_str):
             pattern_declaration = 'PATTERN %d' % i  
             print(pattern_declaration)
-            if ( ((i >= 8) and (i <= 19)) or (i == 27) or (i == 35) or (i == 40) ): #change i if number of stack-trace regex changes! 
+            if ( ((i > 8) and (i <= 19)) or (i == 27) or (i == 35) or (i == 40) ): #change i if number of stack-trace regex changes! 
                 stack_trace_flag = 1
+#                print('third if')
             matches = pattern.findall(temp_str)
-            temp_str = pattern.sub(' ', temp_str)
+            if (i == 78): #haven't -> havent, don't -> dont, pattern 54
+                temp_str = pattern.sub('', temp_str)
+            else:
+                temp_str = pattern.sub(' ', temp_str)
             cleaned_text = temp_str
             print('|||||||||||||||||||||||||||||||BEGIN MATCHES||||||||||||||||||||||||||||||') #mt
             print(matches) #mt
@@ -49,17 +77,17 @@ def filter_pattern(arr_pattern, text):
     return [temp_str, stack_trace_flag]
 
 pattern0 = re.compile(r'({{.*?}})', re.DOTALL) #теперь работают верно
-pattern1 = re.compile(r'.({code.*?{code})', re.DOTALL)
+pattern1 = re.compile(r'({code.*?{code})', re.DOTALL)
 pattern2 = re.compile(r'({noformat.*?{noformat})', re.DOTALL)
 pattern3 = re.compile(r'({panel.*?{panel})', re.DOTALL)
 pattern4 = re.compile(r'({quote.*?{quote})', re.DOTALL)
 pattern5 = re.compile('\\nmysql>.* sec[)]', re.DOTALL) #for sql
 pattern6 = re.compile('Original Message.*\\n(>\\s)?Subject:.*\\n(>\\s)?Date:.*\\n(>\\s)?From:.*\\n(>\\s)?To:.*')
 pattern7 = re.compile('\\n(>\\s)?Service Level:.*\\n(>\\s)?Product:.*\\n(>\\s)?Response Time:.*\\n(>\\s)?Time of Expiration:.*\\n(>\\s)?Created:.*\\n(>\\s)?URL:.*\\n(>\\s)?Subject:.*')
-pattern8 = re.compile('\\n(>\\s)?Resolving.*\\n(>\\s)?Connecting.*\\n(>\\s)?HTTP.*\\n(>\\s)?(\\s)+HTTP.*\\n(>\\s)?(\\s)+Date:.*\\n(>\\s)?(\\s)+Server:.*(?:(\\n(>\\s)?(\\s)+Location:.*\\n(>\\s)?(\\s)+Content-Length:.*\\n(>\\s)?(\\s)+Keep-Alive:.*\\n(>\\s)?(\\s)+Connection:.*\\n(>\\s)?(\\s)+Content-Type:.*(\\n(>\\s)?(\\s)+Location:.*)?)|(\\n(>\\s)?(\\s)+X-Powered-By:.*\\n(>\\s)?(\\s)+Content-Type:.*\\n(>\\s)?(\\s)+(?:(Content-Language:)|(Content-Length:)).*(\\n(>\\s)?(\\s)+Set-Cookie:.*)?(\\n(>\\s)?(\\s)+Via:.*)?(\\n(>\\s)?(\\s)+Connection:.*)?))(.*Length:.*)?')
+pattern8 = re.compile('[[(][0-9][0-9]:[0-9][0-9].*(?:(PM)|(AM)).*:')
 
-pattern9 = re.compile('[[(][0-9][0-9]:[0-9][0-9].*(?:(PM)|(AM)).*:')
-pattern10 = re.compile('(?:(.*ALERT.*)|(?:(.*WFLY.*)|(?:.*ERROR.*|(?:.*INFO.*|(?:.*WARN.*|(?:.*CLOSE_WAIT.*|(?:.*BLOCKED.*|(?:.*DEBUG.*|.*WAITING.*))))))))') 
+pattern9 = re.compile('\\n(>\\s)?Resolving.*\\n(>\\s)?Connecting.*\\n(>\\s)?HTTP.*\\n(>\\s)?(\\s)+HTTP.*\\n(>\\s)?(\\s)+Date:.*\\n(>\\s)?(\\s)+Server:.*(?:(\\n(>\\s)?(\\s)+Location:.*\\n(>\\s)?(\\s)+Content-Length:.*\\n(>\\s)?(\\s)+Keep-Alive:.*\\n(>\\s)?(\\s)+Connection:.*\\n(>\\s)?(\\s)+Content-Type:.*(\\n(>\\s)?(\\s)+Location:.*)?)|(\\n(>\\s)?(\\s)+X-Powered-By:.*\\n(>\\s)?(\\s)+Content-Type:.*\\n(>\\s)?(\\s)+(?:(Content-Language:)|(Content-Length:)).*(\\n(>\\s)?(\\s)+Set-Cookie:.*)?(\\n(>\\s)?(\\s)+Via:.*)?(\\n(>\\s)?(\\s)+Connection:.*)?))(.*Length:.*)?')
+pattern10 = re.compile('(?:(.*ALERT.*)|(?:(.*ERROR.*)|(?:.*ERROR.*|(?:.*INFO.*|(?:.*WARN.*|(?:.*CLOSE_WAIT.*|(?:.*BLOCKED.*|(?:.*DEBUG.*|.*WAITING.*))))))))') 
 pattern11 = re.compile('(?:(((\\n.*ERROR.*)+)?((.*ERROR.*\\n)+)?((.*[a-zA-Z]Exception.*\\n)+)?((.*[a-zA-Z]Error.*\\n)+)?((.*at .*[(].*(?:java|(?:Unknown Source|Native Method)).*[)].*)+))|((((?:((\\n.*ERROR.*)+)|((.*ERROR.*\\n)+)))+)((((.*[a-zA-Z]Exception.*\\n)+)))))')
 pattern12 = re.compile('.*(?:waiting|locked).*0x.*[(].*[)].*')
 pattern13 = re.compile('.*0x.*0x.*')
@@ -86,7 +114,7 @@ pattern30 = re.compile('[a-z]+[A-Z][a-z]+( )?[{].*[}]', re.DOTALL)
 pattern31 = re.compile('[A-Z][a-z]+[A-Z][a-z]+[(].*[)]')
 pattern32 = re.compile('{.*return.*}', re.DOTALL)
 pattern33 = re.compile('[^\\s]*@[^\\s]*')
-pattern34 = re.compile('[a-z]+[A-Z][a-z]+[^\\s]*')
+pattern34 = re.compile('[A-Z]+?[a-z]+[A-Z][a-z]+[^\\s]*')
 pattern35 = re.compile('[0-9]+.*has been deprecated')
 #pattern32 = re.compile('[[][0-9][0-9]:[0-9][0-9] (?:(PM)|(AM))[]].*:')
 pattern36 = re.compile('@[^\\s]*')
@@ -109,10 +137,11 @@ pattern51 = re.compile(r'\b(a2p|ac|addgroup|adduser|agrep|alias|apropos|apt-cach
 pattern52 = re.compile('(?:https|http)://\w*\S*\d*', re.DOTALL)
 #pattern50 = re.compile(r'\(\d{2}:.*?\n', re.DOTALL)
 pattern53 = re.compile('[^\\s]*[0-9][^\\s]*')
-pattern54 = re.compile('[^a-zA-Z\'\\s]+')
+pattern54 = re.compile('[^a-zA-Z\'\\s]+') #varsion with leaving words like doesn't i'll
 pattern55 = re.compile('\\sPM\\s')
 pattern56 = re.compile('\\sAM\\s')
 
+#deleting java key-words
 pattern57 = re.compile('(?:(\\sabstract\\s)|(\\sassert\\s))')
 pattern58 = re.compile('(?:(\\sboolean\\s)|(\\sbreak\\s))')
 pattern59 = re.compile('(?:(\\sbyte\\s)|(\\scase\\s))')
@@ -134,7 +163,9 @@ pattern74 = re.compile('(?:(\\stry\\s)|(\\svoid\\s))')
 pattern75 = re.compile('(?:(\\svolatile\\s)|(\\swhile\\s))')
 pattern76 = re.compile('(?:(\\strue\\s)|(\\sfalse\\s))')
 pattern77 = re.compile('\\snull\\s')
-                       
+
+#pattern78 = re.compile('\\s[a-zA-Z]\'\\s') #deleting words from one symbol
+pattern78 = re.compile('\'')
 
 #нужно добавить шаблонов
 arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4, 
@@ -149,12 +180,12 @@ arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4,
                 pattern56, pattern57, pattern58, pattern59, pattern60, pattern61, pattern62,
                 pattern63, pattern64, pattern65, pattern66, pattern67, pattern68, pattern69,
                 pattern70, pattern71, pattern72, pattern73, pattern74, pattern75, pattern76,
-                pattern77]
+                pattern77, pattern78]
 
 number_of_bug_descr = list()
 list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
 
-for i in range(1,2):
+for i in range(2,3):
     str_path = "F:\\mike\\hse\\exactpro\\all_projects\\JBoss%d.csv" % i
     data = pd.read_csv(str_path)
     data_description0 = data['Description'][1:]
@@ -170,9 +201,9 @@ for i in range(1,2):
 #   
 
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-        if k < 136:
+        if k < 98:
             continue
-        if k == 140:
+        if k == 101:
             print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
