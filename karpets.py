@@ -166,6 +166,7 @@ pattern77 = re.compile('\\snull\\s')
 
 pattern78 = re.compile('\'')
 pattern79 = re.compile('\\s[a-zA-Z]\\s') #deleting words from one symbol
+pattern80 = re.compile('\\s[A-Z]+\\s') #deleting abbreviation
 
 
 #нужно добавить шаблонов
@@ -181,13 +182,13 @@ arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4,
                 pattern56, pattern57, pattern58, pattern59, pattern60, pattern61, pattern62,
                 pattern63, pattern64, pattern65, pattern66, pattern67, pattern68, pattern69,
                 pattern70, pattern71, pattern72, pattern73, pattern74, pattern75, pattern76,
-                pattern77, pattern78, pattern79]
+                pattern77, pattern78, pattern79, pattern80]
 
 number_of_bug_descr = list()
 list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
 
 
-for i in range(1,4):
+for i in range(2,3):
     str_path = "F:\\mike\\hse\\exactpro\\all_projects\\JBoss%d.csv" % i
     data = pd.read_csv(str_path)
     data_description0 = data['Description'][1:]
@@ -203,9 +204,9 @@ for i in range(1,4):
 #   
 
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-#        if k < 60:
-#            continue
-#        if k == 70:
+        if k < 0:
+            continue
+        if k == 3:
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
@@ -216,7 +217,7 @@ for i in range(1,4):
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            break
+            break
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
