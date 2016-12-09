@@ -167,7 +167,8 @@ pattern77 = re.compile('\\snull\\s')
 pattern78 = re.compile('\'')
 pattern79 = re.compile('\\s[a-zA-Z]\\s') #deleting words from one symbol
 pattern80 = re.compile('\\s[A-Z]+\\s') #deleting abbreviation
-
+pattern81 = re.compile('.*undefined.*\\n.*undefined.*\\n.*undefined.*\\n.*undefined.*\\n.*undefined.*\\n') #215 in project 2
+pattern82 = re.compile('relay.*undefined.*\\n.*transport.*\\n.*undefined.*\\n.*undefined') #215 in project 2
 
 #нужно добавить шаблонов
 arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4, 
@@ -182,7 +183,7 @@ arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4,
                 pattern56, pattern57, pattern58, pattern59, pattern60, pattern61, pattern62,
                 pattern63, pattern64, pattern65, pattern66, pattern67, pattern68, pattern69,
                 pattern70, pattern71, pattern72, pattern73, pattern74, pattern75, pattern76,
-                pattern77, pattern78, pattern79, pattern80]
+                pattern77, pattern78, pattern79, pattern80, pattern81, pattern82]
 
 number_of_bug_descr = list()
 list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
@@ -204,9 +205,9 @@ for i in range(2,3):
 #   
 
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-        if k < 0:
+        if k < 215:
             continue
-        if k == 3:
+        if k == 216:
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            print('|||||||||||||||||||||||||||||||||||||||||||')
