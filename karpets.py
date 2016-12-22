@@ -53,10 +53,10 @@ def filter_pattern(arr_pattern, text):
                 stack_trace_flag = 1
 #                print('third if')
             matches = pattern.findall(temp_str)
-            if (i == 78): #haven't -> havent, don't -> dont, pattern 54
-                temp_str = pattern.sub('', temp_str)
-            else:
-                temp_str = pattern.sub(' ', temp_str)
+#            if (i == 78): #haven't -> havent, don't -> dont, pattern 54
+#                temp_str = pattern.sub(' ', temp_str)
+#            else:
+            temp_str = pattern.sub(' ', temp_str)
             cleaned_text = temp_str
             print('|||||||||||||||||||||||||||||||BEGIN MATCHES||||||||||||||||||||||||||||||') #mt
             print(matches) #mt
@@ -138,7 +138,7 @@ pattern52 = re.compile('(?:https|http)://\w*\S*\d*', re.DOTALL)
 #pattern50 = re.compile(r'\(\d{2}:.*?\n', re.DOTALL)
 pattern53 = re.compile('[^\\s]*[0-9][^\\s]*')
 #pattern53_1 = re.compile('\\s[^a-zA-Z\\s]*[a-zA-Z]+[^a-zA-Z\\s]*.*\\s') #deleting all words with no-letters
-pattern54 = re.compile('[^a-zA-Z\'\\s]+') #varsion with leaving words like doesn't i'll
+pattern54 = re.compile('[^a-zA-Z\\s]+') #varsion with deleting words like doesn't i'll
 pattern55 = re.compile('\\sPM\\s')
 pattern56 = re.compile('\\sAM\\s')
 
@@ -165,7 +165,7 @@ pattern75 = re.compile('(?:(\\svolatile\\s)|(\\swhile\\s))')
 pattern76 = re.compile('(?:(\\strue\\s)|(\\sfalse\\s))')
 pattern77 = re.compile('\\snull\\s')
 
-pattern78 = re.compile('\'')
+pattern78 = re.compile('[a-zA-Z]+\'[a-zA-Z]+') #deleting words with ' symbol inside
 pattern79 = re.compile('\\s[a-zA-Z]\\s') #deleting words from one symbol
 pattern80 = re.compile('\\s[A-Z]+\\s') #deleting abbreviation
 pattern81 = re.compile('.*undefined.*\\n.*undefined.*\\n.*undefined.*\\n.*undefined.*\\n.*undefined.*\\n') #215 in project 2
@@ -176,6 +176,14 @@ pattern85 = re.compile('\\t\\smodule option.*\\n\\t\\smodule option.*\\n\\t\\smo
 pattern86 = re.compile('\\s\\sFailed to load module\\s\\s\\sextension.*\\n.*\\n\\s\\sFailed to load module\\s\\s\\sextension.*\\n.*\\n') #709 in project 2
 pattern87 = re.compile('\\sdoes\\s')
 pattern88 = re.compile('\\sdoesnt\\s')
+pattern89 = re.compile('\\sive\\s')
+pattern90 = re.compile('\\sdont\\s')
+pattern91 = re.compile('\\shes\\s')
+pattern92 = re.compile('\\sill\\s')
+pattern93 = re.compile('\\sdid\\s')
+pattern94 = re.compile('\\syoull\\s')
+pattern95 = re.compile('\\sdoesn\\s')
+pattern96 = re.compile('\\shaven\\s')
 
 #нужно добавить шаблонов
 arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4, 
@@ -191,7 +199,9 @@ arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4,
                 pattern63, pattern64, pattern65, pattern66, pattern67, pattern68, pattern69,
                 pattern70, pattern71, pattern72, pattern73, pattern74, pattern75, pattern76,
                 pattern77, pattern78, pattern79, pattern80, pattern81, pattern82, pattern83,
-                pattern84, pattern85, pattern86, pattern87, pattern88]
+                pattern84, pattern85, pattern86, pattern87, pattern88, pattern89,
+                pattern90, pattern91, pattern92, pattern93, pattern94, pattern95, pattern96,
+                ]
 
 number_of_bug_descr = list()
 list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
@@ -200,6 +210,7 @@ list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
 for i in range(1,4):
     str_path = "F:\\mike\\hse\\exactpro\\all_projects\\JBoss%d.csv" % i
     data = pd.read_csv(str_path)
+    
     data_description0 = data['Description'][1:]
     data_description0.dropna(inplace = True)
     data_description0.to_frame()
@@ -213,19 +224,19 @@ for i in range(1,4):
 #   
 
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-#        if k < 98:
+#        if k < 2:
 #            continue
-#        if k == 101:
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            print('|||||||||||||||||||||||||||||||||||||||||||')
+#        if k == 5:
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
+##            print('|||||||||||||||||||||||||||||||||||||||||||')
 #            break
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
