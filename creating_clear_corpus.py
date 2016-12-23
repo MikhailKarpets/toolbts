@@ -227,7 +227,7 @@ for i in range(1,2):
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
         if k < 1:
             continue
-        if k == 1:
+        if k == 2:
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
@@ -329,17 +329,31 @@ for item in list_tokens_with_stack_trace_flag:
     temp_str = ' '.join(item[0])
     corpus.append(temp_str)
 
-from sklearn.feature_extraction.text import CountVectorizer
-bigram_vectorizer = CountVectorizer(ngram_range=(1, 2))
-X = bigram_vectorizer.fit_transform(corpus)
-#print(len(bigram_vectorizer.get_feature_names()))
-
-from sklearn.feature_extraction.text import TfidfTransformer
-transformer = TfidfTransformer(smooth_idf=True)
-tfidf = transformer.fit_transform(X)
+#from sklearn.feature_extraction.text import CountVectorizer
+#bigram_vectorizer = CountVectorizer(ngram_range=(1, 2))
+#X = bigram_vectorizer.fit_transform(corpus)
+##print(len(bigram_vectorizer.get_feature_names()))
+#
+#from sklearn.feature_extraction.text import TfidfTransformer
+#transformer = TfidfTransformer(smooth_idf=True)
+#tfidf = transformer.fit_transform(X)
 
 #228-241 must be commented!!!
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+#import numpy as np
+#from scipy.sparse.csr import csr_matrix #need this if you want to save tfidf_matrix
 
+tf = TfidfVectorizer(input=corpus, ngram_range=(1,2), smooth_idf=True) #adding 1 to all term frequencies
+tfidf_matrix =  tf.fit_transform(corpus)
+
+feature_names = tf.get_feature_names()
+
+doc = 1
+feature_index = tfidf_matrix[doc,:].nonzero()[1]
+tfidf_scores = zip(feature_index, [tfidf_matrix[doc, x] for x in feature_index])
+
+for w, s in [(feature_names[i], s) for (i, s) in tfidf_scores]:
+    print(w, s)
 
 
