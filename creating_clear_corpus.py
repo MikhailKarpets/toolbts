@@ -184,6 +184,7 @@ pattern93 = re.compile('\\sdid\\s')
 pattern94 = re.compile('\\syoull\\s')
 pattern95 = re.compile('\\sdoesn\\s')
 pattern96 = re.compile('\\shaven\\s')
+pattern97 = re.compile('\\sdon\\s')
 
 #нужно добавить шаблонов
 arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4, 
@@ -201,13 +202,13 @@ arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4,
                 pattern77, pattern78, pattern79, pattern80, pattern81, pattern82, pattern83,
                 pattern84, pattern85, pattern86, pattern87, pattern88, pattern89,
                 pattern90, pattern91, pattern92, pattern93, pattern94, pattern95, pattern96,
-                ]
+                pattern97]
 
 number_of_bug_descr = list()
 list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
 
 
-for i in range(1,4):
+for i in range(1,2):
     str_path = "F:\\mike\\hse\\exactpro\\all_projects\\JBoss%d.csv" % i
     data = pd.read_csv(str_path)
     
@@ -224,9 +225,9 @@ for i in range(1,4):
 #   
 
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-#        if k < 2:
-#            continue
-#        if k == 5:
+        if k < 1:
+            continue
+        if k == 1:
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
@@ -237,7 +238,7 @@ for i in range(1,4):
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
-#            break
+            break
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
@@ -321,3 +322,24 @@ for item in list_bigrams_with_stack_trace_flag:
     thefile_bigrams.write("%r\n" % my_str)
     thefile_bigrams.write("%s\n" % str(item[1]))
 thefile_bigrams.close()
+
+
+corpus = list() #array with strings
+for item in list_tokens_with_stack_trace_flag:
+    temp_str = ' '.join(item[0])
+    corpus.append(temp_str)
+
+from sklearn.feature_extraction.text import CountVectorizer
+bigram_vectorizer = CountVectorizer(ngram_range=(1, 2))
+X = bigram_vectorizer.fit_transform(corpus)
+#print(len(bigram_vectorizer.get_feature_names()))
+
+from sklearn.feature_extraction.text import TfidfTransformer
+transformer = TfidfTransformer(smooth_idf=True)
+tfidf = transformer.fit_transform(X)
+
+#228-241 must be commented!!!
+
+
+
+
