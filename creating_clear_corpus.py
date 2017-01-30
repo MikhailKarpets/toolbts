@@ -1,14 +1,18 @@
 from nltk.corpus import stopwords 
-import nltk
 from nltk.util import ngrams 
-import csv 
-import string 
 import os
-
 import pandas as pd
+import numpy as np
 import re
-#import numpy as np
-
+from nltk.stem.api import StemmerI
+from nltk.stem.regexp import RegexpStemmer
+from nltk.stem.lancaster import LancasterStemmer
+from nltk.stem.isri import ISRIStemmer
+from nltk.stem.porter import PorterStemmer
+from nltk.stem.snowball import SnowballStemmer
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.stem.rslp import RSLPStemmer
+from datetime import datetime
 
 def filter_pattern(arr_pattern, text):
     print('||||||||||||||||||||RAW TEXT|||||||||||||||||||||||')
@@ -76,6 +80,35 @@ def filter_pattern(arr_pattern, text):
     temp_str = " ".join(temp_str.split())
     return [temp_str, stack_trace_flag]
 
+def lifetime_of_bug_report_in_days(str_created, str_resolved): #format '17/Oct/06 10:50 AM' years 20...
+    if (str_resolved == '01/Jan/99 12:00 AM'):
+        return 100500
+    str2 = str_created.split()
+    str20 = str2[0]
+    str21 = str2[1]
+    str22 = str2[2]
+    str30 = str20.split("/")
+    str31 = str21 + str22
+    str40 = str30[0]
+    str41 = str30[1]
+    str42 = str30[2]
+    time_string = str41 + ' ' + str40 + ' ' + '20' + str42 + ' ' + str31
+    datetime_object_created = datetime.strptime(time_string, '%b %d %Y %I:%M%p')  
+    str2 = str_resolved.split()
+    str20 = str2[0]
+    str21 = str2[1]
+    str22 = str2[2]
+    str30 = str20.split("/")
+    str31 = str21 + str22
+    str40 = str30[0]
+    str41 = str30[1]
+    str42 = str30[2]
+    time_string = str41 + ' ' + str40 + ' ' + '20' + str42 + ' ' + str31
+    datetime_object_resolved = datetime.strptime(time_string, '%b %d %Y %I:%M%p')
+    lifetime_of_bug_report =  datetime_object_resolved - datetime_object_created
+    return lifetime_of_bug_report.days #int
+
+    
 pattern0 = re.compile(r'({{.*?}})', re.DOTALL) #теперь работают верно
 pattern1 = re.compile(r'({code.*?{code})', re.DOTALL)
 pattern2 = re.compile(r'({noformat.*?{noformat})', re.DOTALL)
@@ -185,6 +218,7 @@ pattern94 = re.compile('\\syoull\\s')
 pattern95 = re.compile('\\sdoesn\\s')
 pattern96 = re.compile('\\shaven\\s')
 pattern97 = re.compile('\\sdon\\s')
+pattern98 = re.compile('\\sisnt\\s')
 
 #нужно добавить шаблонов
 arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4, 
@@ -202,18 +236,28 @@ arr_patterns = [pattern0, pattern1, pattern2, pattern3, pattern4,
                 pattern77, pattern78, pattern79, pattern80, pattern81, pattern82, pattern83,
                 pattern84, pattern85, pattern86, pattern87, pattern88, pattern89,
                 pattern90, pattern91, pattern92, pattern93, pattern94, pattern95, pattern96,
-                pattern97]
+                pattern97, pattern98]
 
 number_of_bug_descr = list()
 list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
 
 
-for i in range(1,2):
-    str_path = "F:\\mike\\hse\\exactpro\\all_projects\\JBoss%d.csv" % i
-    data = pd.read_csv(str_path)
+arr_time_created_for_all_projects = list()
+arr_time_resolved_for_all_projects = list()
+
+for i in [1, 2, 3]:
+    str_path = "F:\\mike\\hse\\sem_2\\exactpro\\all_projects\\JBoss%d.csv" % i
+    data = pd.read_csv(str_path)    
+    
+    data.dropna(subset = ['Description'], inplace = True)
+    time_created = list(data['Created'][1:])
+    
+    arr_time_created_for_all_projects = arr_time_created_for_all_projects + time_created
+    time_resolved = list(data['Resolved'][1:])
+    arr_time_resolved_for_all_projects = arr_time_resolved_for_all_projects + time_resolved
     
     data_description0 = data['Description'][1:]
-    data_description0.dropna(inplace = True)
+#    data_description0.dropna(inplace = True)
     data_description0.to_frame()
     data_len = len(data_description0)
     number_of_bug_descr.append(data_len)
@@ -222,12 +266,13 @@ for i in range(1,2):
     
     subset = data_description[['Description', 'HasStackTrace']]
     list_of_bugs_descriptions_and_stack_trace_flags = [list(x) for x in subset.values]
-#   
+                                                       
 
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-        if k < 1:
-            continue
-        if k == 2:
+#        continue
+#        if k < 1:
+#            continue
+#        if k == 50:
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
@@ -238,7 +283,7 @@ for i in range(1,2):
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
-            break
+#            break
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
@@ -253,7 +298,8 @@ for i in range(1,2):
 #        print('|||||||||||||||||||||||||||||||END TEXT with trash|||||||||||||||||||||||||||')
 #        print()
 #        print()
-        list_of_bugs_descriptions_and_stack_trace_flags[k] = filter_pattern(arr_patterns, text)  
+        list_of_bugs_descriptions_and_stack_trace_flags[k] = filter_pattern(arr_patterns, text) 
+         
         
     list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags + list_of_bugs_descriptions_and_stack_trace_flags
 #    print('-------------------THIS IS THE END-----------------------')
@@ -261,11 +307,34 @@ for i in range(1,2):
     print(str_for_print)
     print(len(list_of_bugs_descriptions_and_stack_trace_flags))
 
+   
 
 #print(list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags)
 print('Number of all descriptions: ')
 print(len(list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags))
 #print(list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags)
+
+#stem function
+def stem(tokens, stop_words):
+    #different stemm algorithms
+    stemming_algorithms = {
+    "stemmer1" : SnowballStemmer("english"),
+    "stemmer2" : StemmerI,
+    "stemmer3" : RegexpStemmer,
+    "stemmer4" : LancasterStemmer,
+    "stemmer5" : ISRIStemmer,
+    "stemmer6" : PorterStemmer,
+    "stemmer7" : SnowballStemmer,
+    "stemmer8" : WordNetLemmatizer,
+    "stemmer9" : RSLPStemmer}
+    tokens = [stemming_algorithms['stemmer1'].stem(token) for token in tokens if (token not in stop_words)] 
+    return tokens 
+    
+#lemmatize function   
+def lem(tokens, stop_words):
+    lmtzr = WordNetLemmatizer()
+    tokens = [lmtzr.lemmatize(token) for token in tokens if (token not in stop_words)] 
+    return tokens
 
 #return tokens without stop words
 def get_tokens(file_text):
@@ -286,9 +355,13 @@ def get_tokens(file_text):
         stop_words = variants_of_stopwords['319']
     except KeyError as e:
         raise ValueError('Undefined unit: {}'.format(e.args[1]))
-    tokens = [i for i in tokens if ( i not in stop_words )] 
-    
-    return tokens 
+    #call stem or lem function
+    stem_or_lem = {
+    "stem" : stem(tokens, stop_words), #CHECK IT
+    "lem" : lem(tokens, stop_words)                
+    }
+    tokens = stem_or_lem["lem"]
+    return tokens
 
 #return bigrams
 def get_bigrams(file_text):
@@ -324,36 +397,198 @@ for item in list_bigrams_with_stack_trace_flag:
 thefile_bigrams.close()
 
 
+arr_i = list()
+for i,item in enumerate(arr_time_resolved_for_all_projects):
+    if type(item) == float:
+        arr_time_resolved_for_all_projects[i] = '01/Jan/99 12:00 AM'
+        arr_i.append(i)
+
+list_of_bug_reports_lifetimes = list()
+for i in range(len(arr_time_created_for_all_projects)):
+    list_of_bug_reports_lifetimes.append(lifetime_of_bug_report_in_days(arr_time_created_for_all_projects[i],
+                                                                        arr_time_resolved_for_all_projects[i]))
+
+list_of_bug_reports_lifetimes = [i for j, i in enumerate(list_of_bug_reports_lifetimes) if j not in arr_i]
+
 corpus = list() #array with strings
 for item in list_tokens_with_stack_trace_flag:
     temp_str = ' '.join(item[0])
     corpus.append(temp_str)
 
-#from sklearn.feature_extraction.text import CountVectorizer
-#bigram_vectorizer = CountVectorizer(ngram_range=(1, 2))
-#X = bigram_vectorizer.fit_transform(corpus)
-##print(len(bigram_vectorizer.get_feature_names()))
-#
-#from sklearn.feature_extraction.text import TfidfTransformer
-#transformer = TfidfTransformer(smooth_idf=True)
-#tfidf = transformer.fit_transform(X)
-
+corpus = [i for j, i in enumerate(corpus) if j not in arr_i]   
+    
 #228-241 must be commented!!!
 
 from sklearn.feature_extraction.text import TfidfVectorizer
-#import numpy as np
-#from scipy.sparse.csr import csr_matrix #need this if you want to save tfidf_matrix
+from scipy.sparse.csr import csr_matrix #need this if you want to save tfidf_matrix
 
-tf = TfidfVectorizer(input=corpus, ngram_range=(1,2), smooth_idf=True) #adding 1 to all term frequencies
+tf = TfidfVectorizer(input=corpus, ngram_range=(1,1), smooth_idf=True) #adding 1 to all term frequencies
 tfidf_matrix =  tf.fit_transform(corpus)
-
 feature_names = tf.get_feature_names()
+print(len(feature_names))
 
-doc = 1
-feature_index = tfidf_matrix[doc,:].nonzero()[1]
-tfidf_scores = zip(feature_index, [tfidf_matrix[doc, x] for x in feature_index])
+#doc = 1
+#feature_index = tfidf_matrix[doc,:].nonzero()[1]
+#tfidf_scores = zip(feature_index, [tfidf_matrix[doc, x] for x in feature_index])
+#
+#for w, s in [(feature_names[i], s) for (i, s) in tfidf_scores]:
+#    print(w, s)
 
-for w, s in [(feature_names[i], s) for (i, s) in tfidf_scores]:
-    print(w, s)
+#indices = np.argsort(tf.idf_)[::-1] #return max tf-idf
+#indices = np.argsort(tf.idf_) #return min tf-idf
+
+#top_n = 10
+#top_features = [feature_names[i] for i in indices[:top_n]]
+#print(top_features)
 
 
+print('Number of all descriptions: ')
+print(len(list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags))
+print(len(arr_time_created_for_all_projects))
+print(len(arr_time_resolved_for_all_projects))
+
+
+#2122 - 228
+print(len(list_of_bug_reports_lifetimes))
+print(len(corpus))
+print('---------------------------------------------')
+
+#tfidf_matrix - matrix objects-features
+#list_of_bug_reports_lifetimes - target values
+
+from sklearn.model_selection import train_test_split
+
+tfidf_matrix_dense = tfidf_matrix.toarray()
+X_train_all_features, X_test_all_features, y_train, y_test = train_test_split(tfidf_matrix_dense, list_of_bug_reports_lifetimes,
+                                                    test_size=0.33, random_state=42)
+
+#import matplotlib.pyplot as plt
+#hist, bin_edges = np.histogram(list_of_bug_reports_lifetimes, range = [0,20],
+#                               bins=20, density=False)
+#plt.hist(hist, bin_edges)
+#print(hist)
+#print(bin_edges)
+
+from collections import Counter
+print(Counter(list_of_bug_reports_lifetimes))
+
+from sklearn.feature_selection import chi2
+from sklearn.feature_selection import SelectKBest
+ch2 = SelectKBest(chi2, k=1500) #try to change that
+X_train_50_features = ch2.fit_transform(X_train_all_features, y_train)
+X_test_50_features = ch2.fit_transform(X_test_all_features, y_test)
+print(np.asarray(tf.get_feature_names())[ch2.get_support()])
+
+def to_list_of_lifetimes_after_cutoff(arr_before, cutoff):
+    arr_after = list()
+    for item in arr_before:
+        if (item > cutoff):
+            arr_after.append(1)
+        else:
+            arr_after.append(0)
+    return arr_after
+
+
+y_train_10 = to_list_of_lifetimes_after_cutoff(y_train,10)
+print('y_train, cutoff 10')
+print(Counter(y_train_10))
+y_test_10 = to_list_of_lifetimes_after_cutoff(y_test,10)
+print('y_test, cutoff 10')
+print(Counter(y_test_10))
+
+y_train_25 = to_list_of_lifetimes_after_cutoff(y_train,25)
+print('y_train, cutoff 25')
+print(Counter(y_train_25))
+y_test_25 = to_list_of_lifetimes_after_cutoff(y_test,25)
+print('y_test, cutoff 25')
+print(Counter(y_test_25))
+
+y_train_50 = to_list_of_lifetimes_after_cutoff(y_train,50)
+print('y_train, cutoff 50')
+print(Counter(y_train_50))
+y_test_50 = to_list_of_lifetimes_after_cutoff(y_test,50)
+print('y_test, cutoff 50')
+print(Counter(y_test_50))
+
+
+from sklearn import metrics
+from sklearn.linear_model import LogisticRegression
+
+#LOGISTIC REGRESSION cutoff 10, 50
+print('LOGISTIC REGRESSION cutoff 10')
+model = LogisticRegression()
+model.fit(X_train_50_features, y_train_10)
+print(model)
+# make predictions
+expected = y_test_10
+predicted = model.predict(X_test_50_features)
+# summarize the fit of the model
+print(metrics.classification_report(expected, predicted))
+print(metrics.confusion_matrix(expected, predicted))
+print('-----------------------------------')
+
+print('LOGISTIC REGRESSION cutoff 25')
+model2 = LogisticRegression()
+model2.fit(X_train_50_features, y_train_25)
+print(model2)
+# make predictions
+expected = y_test_25
+predicted = model2.predict(X_test_50_features)
+# summarize the fit of the model
+print(metrics.classification_report(expected, predicted))
+print(metrics.confusion_matrix(expected, predicted))
+print('-----------------------------------')
+
+#SVM
+print('SVM_10')
+from sklearn import svm
+clf = svm.SVC(kernel='linear', C = 1.0)
+clf.fit(X_train_50_features, y_train_10)
+print(clf)
+# make predictions
+expected = y_test_10
+predicted = clf.predict(X_test_50_features)
+# summarize the fit of the model
+print(metrics.classification_report(expected, predicted))
+print(metrics.confusion_matrix(expected, predicted))
+print('-----------------------------------')
+
+#Decision Tree
+print('DecisionTree_10')
+from sklearn import tree
+clf = tree.DecisionTreeClassifier()
+clf.fit(X_train_50_features, y_train_10)
+print(clf)
+# make predictions
+expected = y_test_10
+predicted = clf.predict(X_test_50_features)
+# summarize the fit of the model
+print(metrics.classification_report(expected, predicted))
+print(metrics.confusion_matrix(expected, predicted))
+print('-----------------------------------')
+
+#Random Forest
+print('Random Forest_10')
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier(n_estimators=100)
+clf.fit(X_train_50_features, y_train_10)
+print(clf)
+# make predictions
+expected = y_test_10
+predicted = clf.predict(X_test_50_features)
+# summarize the fit of the model
+print(metrics.classification_report(expected, predicted))
+print(metrics.confusion_matrix(expected, predicted))
+print('-----------------------------------')
+
+
+print('X_train_50 shape')
+print(X_train_50_features.shape)
+print('X_train_all_features shape')
+print(X_train_all_features.shape)
+print('X_test shape')
+print(X_test_all_features.shape)
+print('y_train len')
+print(len(y_train))
+print('y_test len')
+print(len(y_test))
