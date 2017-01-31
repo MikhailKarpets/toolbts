@@ -427,6 +427,7 @@ tfidf_matrix =  tf.fit_transform(corpus)
 feature_names = tf.get_feature_names()
 print(len(feature_names))
 
+
 #doc = 1
 #feature_index = tfidf_matrix[doc,:].nonzero()[1]
 #tfidf_scores = zip(feature_index, [tfidf_matrix[doc, x] for x in feature_index])
@@ -490,159 +491,245 @@ tfidf_matrix_main_bigrams_dense = tfidf_matrix_main_bigrams.toarray()
 from sklearn.feature_selection import mutual_info_classif
 from sklearn.feature_selection import SelectKBest
 
-mutual_inf_cl = SelectKBest(mutual_info_classif, k=20)
-X_best_20_features_tokens = mutual_inf_cl.fit_transform(tfidf_matrix_main_tokens, target_steps_to_repr) #we need it in future to fit classifiers
-print(mutual_inf_cl.scores_)
-
-print('20 best tokens mutual information classification')
-top_ranked_features = sorted(enumerate(mutual_inf_cl.scores_),key=lambda x:x[1], reverse=True)[:20] #reverse=True - по убыванию
-top_ranked_features_indices = list()
-for item in top_ranked_features:
-    top_ranked_features_indices.append(item[0])
-for selected_features in zip(np.asarray(tf_main_tokens.get_feature_names())[top_ranked_features_indices]):
-    print(selected_features)
-
-#print(np.asarray(tf_main_tokens.get_feature_names())[mutual_inf_cl.get_support()]) #also RIGHT VERSION
-
-print('---------------------------')
-
-mutual_inf_cl1 = mutual_info_classif(tfidf_matrix_main_tokens, target_steps_to_repr)
-print(mutual_inf_cl1)
-
-print('20 worst tokens mutual information classification')
-top_ranked_features0 = sorted(enumerate(mutual_inf_cl1),key=lambda x:x[1])[:20] #reverse=True - по убыванию
-#print(top_ranked_features0)
-top_ranked_features_indices0 = list()
-for item in top_ranked_features0:
-    top_ranked_features_indices0.append(item[0])
-for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices0]):
-    print(selected_features)
+print('START FEATURE SELECTION FOR STEPS TO REPRODUCE TARGET VECTOR')
+for y_target in [target_steps_to_repr, target_exp_obs_beh]: 
+    mutual_inf_cl = SelectKBest(mutual_info_classif, k=20)
+    X_best_20_features_tokens = mutual_inf_cl.fit_transform(tfidf_matrix_main_tokens, y_target) #we need it in future to fit classifiers
+    print(mutual_inf_cl.scores_)
     
-#second method - INFORMATION GAIN
-
-def information_gain(X, y):
-
-    def _calIg():
-        entropy_x_set = 0
-        entropy_x_not_set = 0
-        for c in classCnt:
-            probs = classCnt[c] / float(featureTot)
-            entropy_x_set = entropy_x_set - probs * np.log(probs)
-            probs = (classTotCnt[c] - classCnt[c]) / float(tot - featureTot)
-            entropy_x_not_set = entropy_x_not_set - probs * np.log(probs)
-        for c in classTotCnt:
-            if c not in classCnt:
-                probs = classTotCnt[c] / float(tot - featureTot)
+    print('20 best tokens mutual information classification')
+    top_ranked_features = sorted(enumerate(mutual_inf_cl.scores_),key=lambda x:x[1], reverse=True)[:20] #reverse=True - по убыванию
+    top_ranked_features_indices = list()
+    for item in top_ranked_features:
+        top_ranked_features_indices.append(item[0])
+    for selected_features in zip(np.asarray(tf_main_tokens.get_feature_names())[top_ranked_features_indices]):
+        print(selected_features)
+        
+    mutual_inf_cl10 = SelectKBest(mutual_info_classif, k=20)
+    X_best_20_features_bigrams = mutual_inf_cl10.fit_transform(tfidf_matrix_main_bigrams, y_target) #we need it in future to fit classifiers
+    #print(mutual_inf_cl10.scores_)
+    
+    print('20 best bigrams mutual information classification')
+    top_ranked_features10 = sorted(enumerate(mutual_inf_cl10.scores_),key=lambda x:x[1],
+                                   reverse=True)[:20] #reverse=True - по убыванию
+    top_ranked_features_indices10 = list()
+    for item in top_ranked_features10:
+        top_ranked_features_indices10.append(item[0])
+    for selected_features in zip(np.asarray(tf_main_bigrams.get_feature_names())[top_ranked_features_indices10]):
+        print(selected_features)
+    
+    #print(np.asarray(tf_main_tokens.get_feature_names())[mutual_inf_cl.get_support()]) #also RIGHT VERSION
+    
+    print('---------------------------')
+    
+    mutual_inf_cl1 = mutual_info_classif(tfidf_matrix_main_tokens, y_target)
+    #print(mutual_inf_cl1)
+    
+    print('20 worst tokens mutual information classification')
+    top_ranked_features0 = sorted(enumerate(mutual_inf_cl1),key=lambda x:x[1])[:20] #reverse=True - по убыванию
+    #print(top_ranked_features0)
+    top_ranked_features_indices0 = list()
+    for item in top_ranked_features0:
+        top_ranked_features_indices0.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices0]):
+        print(selected_features)
+        
+    mutual_inf_cl20 = mutual_info_classif(tfidf_matrix_main_bigrams, y_target)
+    #print(mutual_inf_cl1)
+    
+    print('20 worst bigrams mutual information classification')
+    top_ranked_features20 = sorted(enumerate(mutual_inf_cl20),key=lambda x:x[1])[:20] #reverse=True - по убыванию
+    #print(top_ranked_features0)
+    top_ranked_features_indices20 = list()
+    for item in top_ranked_features20:
+        top_ranked_features_indices20.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_bigrams)[top_ranked_features_indices20]):
+        print(selected_features)
+        
+    #second method - INFORMATION GAIN
+    
+    def information_gain(X, y):
+    
+        def _calIg():
+            entropy_x_set = 0
+            entropy_x_not_set = 0
+            for c in classCnt:
+                probs = classCnt[c] / float(featureTot)
+                entropy_x_set = entropy_x_set - probs * np.log(probs)
+                probs = (classTotCnt[c] - classCnt[c]) / float(tot - featureTot)
                 entropy_x_not_set = entropy_x_not_set - probs * np.log(probs)
-        return entropy_before - ((featureTot / float(tot)) * entropy_x_set
-                             +  ((tot - featureTot) / float(tot)) * entropy_x_not_set)
-
-    tot = X.shape[0]
-    classTotCnt = {}
-    entropy_before = 0
-    for i in y:
-        if i not in classTotCnt:
-            classTotCnt[i] = 1
-        else:
-            classTotCnt[i] = classTotCnt[i] + 1
-    for c in classTotCnt:
-        probs = classTotCnt[c] / float(tot)
-        entropy_before = entropy_before - probs * np.log(probs)
-
-    nz = X.T.nonzero()
-    pre = 0
-    classCnt = {}
-    featureTot = 0
-    information_gain = []
-    for i in range(0, len(nz[0])):
-        if (i != 0 and nz[0][i] != pre):
-            for notappear in range(pre+1, nz[0][i]):
-                information_gain.append(0)
-            ig = _calIg()
-            information_gain.append(ig)
-            pre = nz[0][i]
-            classCnt = {}
-            featureTot = 0
-        featureTot = featureTot + 1
-        yclass = y[nz[1][i]]
-        if yclass not in classCnt:
-            classCnt[yclass] = 1
-        else:
-            classCnt[yclass] = classCnt[yclass] + 1
-    ig = _calIg()
-    information_gain.append(ig)
-
-    return np.asarray(information_gain)
-
+            for c in classTotCnt:
+                if c not in classCnt:
+                    probs = classTotCnt[c] / float(tot - featureTot)
+                    entropy_x_not_set = entropy_x_not_set - probs * np.log(probs)
+            return entropy_before - ((featureTot / float(tot)) * entropy_x_set
+                                 +  ((tot - featureTot) / float(tot)) * entropy_x_not_set)
     
-print('20 best tokens INFO GAIN')
-top_ranked_features1 = sorted(enumerate(information_gain(tfidf_matrix_main_tokens,
-                                                         target_steps_to_repr)),
-            key=lambda x:x[1], reverse = True)[:20] #reverse=True - по убыванию
-#print(top_ranked_features1)
-top_ranked_features_indices1 = list()
-for item in top_ranked_features1:
-    top_ranked_features_indices1.append(item[0])
-for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices1]):
-    print(selected_features)
-
-
-print('20 worst tokens INFO GAIN')
-top_ranked_features2 = sorted(enumerate(information_gain(tfidf_matrix_main_tokens,
-                                                         target_steps_to_repr)),
-            key=lambda x:x[1], reverse = False)[:20] #reverse=True - по убыванию
-#print(top_ranked_features2)
-top_ranked_features_indices2 = list()
-for item in top_ranked_features2:
-    top_ranked_features_indices2.append(item[0])
-for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices2]):
-    print(selected_features)
-
-#third method - BI-NORMAL SEPARATION
-
-#from DocumentFeatureSelection import interface
-
-from scipy.stats import norm
-
-def bns(word, data, category):
-    tp = np.sum([word in data[i] for i in range(0, len(data)) if category[i] == 1])
-    fp = np.sum([word in data[i] for i in range(0, len(data)) if category[i] == 0])
-    pos = np.sum(category)
-    neg = len(data) - pos
-    tpr = 1.0 * tp / pos
-    fpr = 1.0 * fp / neg
-    temp = np.abs(norm.ppf(tpr) - norm.ppf(fpr))
-    if np.isinf(temp):
-        temp = 0
+        tot = X.shape[0]
+        classTotCnt = {}
+        entropy_before = 0
+        for i in y:
+            if i not in classTotCnt:
+                classTotCnt[i] = 1
+            else:
+                classTotCnt[i] = classTotCnt[i] + 1
+        for c in classTotCnt:
+            probs = classTotCnt[c] / float(tot)
+            entropy_before = entropy_before - probs * np.log(probs)
+    
+        nz = X.T.nonzero()
+        pre = 0
+        classCnt = {}
+        featureTot = 0
+        information_gain = []
+        for i in range(0, len(nz[0])):
+            if (i != 0 and nz[0][i] != pre):
+                for notappear in range(pre+1, nz[0][i]):
+                    information_gain.append(0)
+                ig = _calIg()
+                information_gain.append(ig)
+                pre = nz[0][i]
+                classCnt = {}
+                featureTot = 0
+            featureTot = featureTot + 1
+            yclass = y[nz[1][i]]
+            if yclass not in classCnt:
+                classCnt[yclass] = 1
+            else:
+                classCnt[yclass] = classCnt[yclass] + 1
+        ig = _calIg()
+        information_gain.append(ig)
+    
+        return np.asarray(information_gain)
+    
+        
+    print('20 best tokens INFO GAIN')
+    top_ranked_features1 = sorted(enumerate(information_gain(tfidf_matrix_main_tokens,
+                                                             y_target)),
+                key=lambda x:x[1], reverse = True)[:20] #reverse=True - по убыванию
+    #print(top_ranked_features1)
+    top_ranked_features_indices1 = list()
+    for item in top_ranked_features1:
+        top_ranked_features_indices1.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices1]):
+        print(selected_features)
+    
+    print('20 best bigrams INFO GAIN')
+    top_ranked_features30 = sorted(enumerate(information_gain(tfidf_matrix_main_bigrams,
+                                                             y_target)),
+                key=lambda x:x[1], reverse = True)[:20] #reverse=True - по убыванию
+    #print(top_ranked_features1)
+    top_ranked_features_indices30 = list()
+    for item in top_ranked_features30:
+        top_ranked_features_indices30.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_bigrams)[top_ranked_features_indices30]):
+        print(selected_features)
+        
+    
+    print('20 worst tokens INFO GAIN')
+    top_ranked_features2 = sorted(enumerate(information_gain(tfidf_matrix_main_tokens,
+                                                             y_target)),
+                key=lambda x:x[1], reverse = False)[:20] #reverse=True - по убыванию
+    #print(top_ranked_features2)
+    top_ranked_features_indices2 = list()
+    for item in top_ranked_features2:
+        top_ranked_features_indices2.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices2]):
+        print(selected_features)
+    
+    print('20 worst bigrams INFO GAIN')
+    top_ranked_features40 = sorted(enumerate(information_gain(tfidf_matrix_main_bigrams,
+                                                             y_target)),
+                key=lambda x:x[1], reverse = False)[:20] #reverse=True - по убыванию
+    #print(top_ranked_features2)
+    top_ranked_features_indices40 = list()
+    for item in top_ranked_features40:
+        top_ranked_features_indices40.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_bigrams)[top_ranked_features_indices40]):
+        print(selected_features)
+        
+    #third method - BI-NORMAL SEPARATION
+    
+    #from DocumentFeatureSelection import interface
+    
+    from scipy.stats import norm
+    
+    def bns(word, data, category):
+        tp = np.sum([word in data[i] for i in range(0, len(data)) if category[i] == 1])
+        fp = np.sum([word in data[i] for i in range(0, len(data)) if category[i] == 0])
+        pos = np.sum(category)
+        neg = len(data) - pos
+        tpr = 1.0 * tp / pos
+        fpr = 1.0 * fp / neg
+        temp = np.abs(norm.ppf(tpr) - norm.ppf(fpr))
+        if np.isinf(temp):
+            temp = 0
+            return temp
         return temp
-    return temp
-
-vector_bns_importances = list()
-for term in feature_names_tokens:
-    vector_bns_importances.append(bns(term, corpus0, target_steps_to_repr))
     
-print('20 best tokens BNS')
-top_ranked_features2 = sorted(enumerate(vector_bns_importances),key=lambda x:x[1],
-                              reverse = True)[:20] #reverse=True - по убыванию
-#print(top_ranked_features2)
-top_ranked_features_indices2 = list()
-for item in top_ranked_features2:
-    top_ranked_features_indices2.append(item[0])
-for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices2]):
-    print(selected_features)   
-
-print('20 worst tokens BNS')
-top_ranked_features3 = sorted(enumerate(vector_bns_importances),key=lambda x:x[1],
-                              reverse = False)[:20] #reverse=True - по убыванию
-#print(top_ranked_features3)
-top_ranked_features_indices3 = list()
-for item in top_ranked_features3:
-    top_ranked_features_indices3.append(item[0])
-for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices3]):
-    print(selected_features)   
-
-
-
+    vector_bns_importances = list()
+    for term in feature_names_tokens:
+        vector_bns_importances.append(bns(term, corpus0, y_target))
+        
+    print('20 best tokens BNS')
+    top_ranked_features2 = sorted(enumerate(vector_bns_importances),key=lambda x:x[1],
+                                  reverse = True)[:20] #reverse=True - по убыванию
+    #print(top_ranked_features2)
+    top_ranked_features_indices2 = list()
+    for item in top_ranked_features2:
+        top_ranked_features_indices2.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices2]):
+        print(selected_features)   
+    
+    print('20 worst tokens BNS')
+    top_ranked_features3 = sorted(enumerate(vector_bns_importances),key=lambda x:x[1],
+                                  reverse = False)[:20] #reverse=True - по убыванию
+    #print(top_ranked_features3)
+    top_ranked_features_indices3 = list()
+    for item in top_ranked_features3:
+        top_ranked_features_indices3.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices3]):
+        print(selected_features)   
+    
+    from nltk import bigrams
+    corpus_bigrams = [bigrams(item) for item in corpus0]   
+        
+    vector_bns_importances_bigrams = list()
+    for term in feature_names_bigrams:
+        vector_bns_importances_bigrams.append(bns(term, corpus_bigrams, y_target))
+        
+    print('20 best bigrams BNS')
+    top_ranked_features50 = sorted(enumerate(vector_bns_importances_bigrams),key=lambda x:x[1],
+                                  reverse = True)[:20] #reverse=True - по убыванию
+    #print(top_ranked_features2)
+    top_ranked_features_indices50 = list()
+    for item in top_ranked_features50:
+        top_ranked_features_indices50.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_bigrams)[top_ranked_features_indices50]):
+        print(selected_features)   
+    
+    print('20 worst bigrams BNS')
+    top_ranked_features60 = sorted(enumerate(vector_bns_importances_bigrams),key=lambda x:x[1],
+                                  reverse = False)[:20] #reverse=True - по убыванию
+    #print(top_ranked_features3)
+    top_ranked_features_indices60 = list()
+    for item in top_ranked_features60:
+        top_ranked_features_indices60.append(item[0])
+    for selected_features in zip(np.asarray(feature_names_bigrams)[top_ranked_features_indices60]):
+        print(selected_features)
+    print('|||||||||||||||||||||||||||||||||||||||')
+    print('|||||||||||||||||||||||||||||||||||||||')
+    print('|||||||||||||||||||||||||||||||||||||||')
+    print('|||||||||||||||||||||||||||||||||||||||')
+    print('START THE SAME FOR EXPECTED/OBSERVES BEHAVIOR TARGET VECTOR')
+    print('|||||||||||||||||||||||||||||||||||||||')
+    print('|||||||||||||||||||||||||||||||||||||||')
+    print('|||||||||||||||||||||||||||||||||||||||')
+    print('|||||||||||||||||||||||||||||||||||||||')
+print('---------------------------------------')
+print('in fact it is THE END')
+print('dont believe bigrams BNS, i did it manually and in a hurry')
+    
 #import matplotlib.pyplot as plt
 #hist, bin_edges = np.histogram(list_of_bug_reports_lifetimes, range = [0,20],
 #                               bins=20, density=False)
