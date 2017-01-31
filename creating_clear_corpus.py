@@ -518,13 +518,85 @@ for item in top_ranked_features0:
 for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices0]):
     print(selected_features)
     
-#second...
+#second method - INFORMATION GAIN
+
+def information_gain(X, y):
+
+    def _calIg():
+        entropy_x_set = 0
+        entropy_x_not_set = 0
+        for c in classCnt:
+            probs = classCnt[c] / float(featureTot)
+            entropy_x_set = entropy_x_set - probs * np.log(probs)
+            probs = (classTotCnt[c] - classCnt[c]) / float(tot - featureTot)
+            entropy_x_not_set = entropy_x_not_set - probs * np.log(probs)
+        for c in classTotCnt:
+            if c not in classCnt:
+                probs = classTotCnt[c] / float(tot - featureTot)
+                entropy_x_not_set = entropy_x_not_set - probs * np.log(probs)
+        return entropy_before - ((featureTot / float(tot)) * entropy_x_set
+                             +  ((tot - featureTot) / float(tot)) * entropy_x_not_set)
+
+    tot = X.shape[0]
+    classTotCnt = {}
+    entropy_before = 0
+    for i in y:
+        if i not in classTotCnt:
+            classTotCnt[i] = 1
+        else:
+            classTotCnt[i] = classTotCnt[i] + 1
+    for c in classTotCnt:
+        probs = classTotCnt[c] / float(tot)
+        entropy_before = entropy_before - probs * np.log(probs)
+
+    nz = X.T.nonzero()
+    pre = 0
+    classCnt = {}
+    featureTot = 0
+    information_gain = []
+    for i in range(0, len(nz[0])):
+        if (i != 0 and nz[0][i] != pre):
+            for notappear in range(pre+1, nz[0][i]):
+                information_gain.append(0)
+            ig = _calIg()
+            information_gain.append(ig)
+            pre = nz[0][i]
+            classCnt = {}
+            featureTot = 0
+        featureTot = featureTot + 1
+        yclass = y[nz[1][i]]
+        if yclass not in classCnt:
+            classCnt[yclass] = 1
+        else:
+            classCnt[yclass] = classCnt[yclass] + 1
+    ig = _calIg()
+    information_gain.append(ig)
+
+    return np.asarray(information_gain)
+
+    
+print('20 best tokens INFO GAIN')
+top_ranked_features1 = sorted(enumerate(information_gain(tfidf_matrix_main_tokens,
+                                                         target_steps_to_repr)),
+            key=lambda x:x[1], reverse = True)[:20] #reverse=True - по убыванию
+print(top_ranked_features1)
+top_ranked_features_indices1 = list()
+for item in top_ranked_features1:
+    top_ranked_features_indices1.append(item[0])
+for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices1]):
+    print(selected_features)
 
 
-
-
-
-
+print('20 worst tokens INFO GAIN')
+top_ranked_features2 = sorted(enumerate(information_gain(tfidf_matrix_main_tokens,
+                                                         target_steps_to_repr)),
+            key=lambda x:x[1], reverse = False)[:20] #reverse=True - по убыванию
+print(top_ranked_features2)
+top_ranked_features_indices2 = list()
+for item in top_ranked_features2:
+    top_ranked_features_indices2.append(item[0])
+for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices2]):
+    print(selected_features)
 
 
 
