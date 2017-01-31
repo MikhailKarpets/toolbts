@@ -494,7 +494,7 @@ mutual_inf_cl = SelectKBest(mutual_info_classif, k=20)
 X_best_20_features_tokens = mutual_inf_cl.fit_transform(tfidf_matrix_main_tokens, target_steps_to_repr) #we need it in future to fit classifiers
 print(mutual_inf_cl.scores_)
 
-print('20 best tokens')
+print('20 best tokens mutual information classification')
 top_ranked_features = sorted(enumerate(mutual_inf_cl.scores_),key=lambda x:x[1], reverse=True)[:20] #reverse=True - по убыванию
 top_ranked_features_indices = list()
 for item in top_ranked_features:
@@ -509,9 +509,9 @@ print('---------------------------')
 mutual_inf_cl1 = mutual_info_classif(tfidf_matrix_main_tokens, target_steps_to_repr)
 print(mutual_inf_cl1)
 
-print('20 worst tokens')
+print('20 worst tokens mutual information classification')
 top_ranked_features0 = sorted(enumerate(mutual_inf_cl1),key=lambda x:x[1])[:20] #reverse=True - по убыванию
-print(top_ranked_features0)
+#print(top_ranked_features0)
 top_ranked_features_indices0 = list()
 for item in top_ranked_features0:
     top_ranked_features_indices0.append(item[0])
@@ -579,7 +579,7 @@ print('20 best tokens INFO GAIN')
 top_ranked_features1 = sorted(enumerate(information_gain(tfidf_matrix_main_tokens,
                                                          target_steps_to_repr)),
             key=lambda x:x[1], reverse = True)[:20] #reverse=True - по убыванию
-print(top_ranked_features1)
+#print(top_ranked_features1)
 top_ranked_features_indices1 = list()
 for item in top_ranked_features1:
     top_ranked_features_indices1.append(item[0])
@@ -591,19 +591,55 @@ print('20 worst tokens INFO GAIN')
 top_ranked_features2 = sorted(enumerate(information_gain(tfidf_matrix_main_tokens,
                                                          target_steps_to_repr)),
             key=lambda x:x[1], reverse = False)[:20] #reverse=True - по убыванию
-print(top_ranked_features2)
+#print(top_ranked_features2)
 top_ranked_features_indices2 = list()
 for item in top_ranked_features2:
     top_ranked_features_indices2.append(item[0])
 for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices2]):
     print(selected_features)
 
+#third method - BI-NORMAL SEPARATION
 
+#from DocumentFeatureSelection import interface
 
+from scipy.stats import norm
 
+def bns(word, data, category):
+    tp = np.sum([word in data[i] for i in range(0, len(data)) if category[i] == 1])
+    fp = np.sum([word in data[i] for i in range(0, len(data)) if category[i] == 0])
+    pos = np.sum(category)
+    neg = len(data) - pos
+    tpr = 1.0 * tp / pos
+    fpr = 1.0 * fp / neg
+    temp = np.abs(norm.ppf(tpr) - norm.ppf(fpr))
+    if np.isinf(temp):
+        temp = 0
+        return temp
+    return temp
 
+vector_bns_importances = list()
+for term in feature_names_tokens:
+    vector_bns_importances.append(bns(term, corpus0, target_steps_to_repr))
+    
+print('20 best tokens BNS')
+top_ranked_features2 = sorted(enumerate(vector_bns_importances),key=lambda x:x[1],
+                              reverse = True)[:20] #reverse=True - по убыванию
+#print(top_ranked_features2)
+top_ranked_features_indices2 = list()
+for item in top_ranked_features2:
+    top_ranked_features_indices2.append(item[0])
+for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices2]):
+    print(selected_features)   
 
-
+print('20 worst tokens BNS')
+top_ranked_features3 = sorted(enumerate(vector_bns_importances),key=lambda x:x[1],
+                              reverse = False)[:20] #reverse=True - по убыванию
+#print(top_ranked_features3)
+top_ranked_features_indices3 = list()
+for item in top_ranked_features3:
+    top_ranked_features_indices3.append(item[0])
+for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices3]):
+    print(selected_features)   
 
 
 
