@@ -270,9 +270,9 @@ for i in [1, 2, 3]:
 
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
 #        continue
-        if k < 1:
-            continue
-        if k == 2:
+#        if k < 1:
+#            continue
+#        if k == 2:
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
@@ -283,7 +283,7 @@ for i in [1, 2, 3]:
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
 ##            print('|||||||||||||||||||||||||||||||||||||||||||')
-            break
+#            break
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
         print('//////////////////////////////////////////////////////////////////////////////')
@@ -483,134 +483,187 @@ print('NUMBER OF BIGRAMS FEATURE NAMES')
 print(len(feature_names_bigrams))
 tfidf_matrix_main_bigrams_dense = tfidf_matrix_main_bigrams.toarray()
 
+#START FEATURE SELECTION
+
+#first mutual_info_classif method
+
+from sklearn.feature_selection import mutual_info_classif
+from sklearn.feature_selection import SelectKBest
+
+mutual_inf_cl = SelectKBest(mutual_info_classif, k=20)
+X_best_20_features_tokens = mutual_inf_cl.fit_transform(tfidf_matrix_main_tokens, target_steps_to_repr) #we need it in future to fit classifiers
+print(mutual_inf_cl.scores_)
+
+print('20 best tokens')
+top_ranked_features = sorted(enumerate(mutual_inf_cl.scores_),key=lambda x:x[1], reverse=True)[:20] #reverse=True - по убыванию
+top_ranked_features_indices = list()
+for item in top_ranked_features:
+    top_ranked_features_indices.append(item[0])
+for selected_features in zip(np.asarray(tf_main_tokens.get_feature_names())[top_ranked_features_indices]):
+    print(selected_features)
+
+#print(np.asarray(tf_main_tokens.get_feature_names())[mutual_inf_cl.get_support()]) #also RIGHT VERSION
+
+print('---------------------------')
+
+mutual_inf_cl1 = mutual_info_classif(tfidf_matrix_main_tokens, target_steps_to_repr)
+print(mutual_inf_cl1)
+
+print('20 worst tokens')
+top_ranked_features0 = sorted(enumerate(mutual_inf_cl1),key=lambda x:x[1])[:20] #reverse=True - по убыванию
+print(top_ranked_features0)
+top_ranked_features_indices0 = list()
+for item in top_ranked_features0:
+    top_ranked_features_indices0.append(item[0])
+for selected_features in zip(np.asarray(feature_names_tokens)[top_ranked_features_indices0]):
+    print(selected_features)
+    
+#second...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #import matplotlib.pyplot as plt
 #hist, bin_edges = np.histogram(list_of_bug_reports_lifetimes, range = [0,20],
 #                               bins=20, density=False)
 #plt.hist(hist, bin_edges)
 #print(hist)
 #print(bin_edges)
-while(1):
-    break
-    from collections import Counter
-    print(Counter(list_of_bug_reports_lifetimes))
+
+#while(1):
+#    break
+#    from collections import Counter
+#    print(Counter(list_of_bug_reports_lifetimes))
     
-    from sklearn.feature_selection import chi2
-    from sklearn.feature_selection import SelectKBest
-    ch2 = SelectKBest(chi2, k=1500) #try to change that
-    X_train_50_features = ch2.fit_transform(X_train_all_features, y_train)
-    X_test_50_features = ch2.fit_transform(X_test_all_features, y_test)
-    print(np.asarray(tf.get_feature_names())[ch2.get_support()])
-    
-    def to_list_of_lifetimes_after_cutoff(arr_before, cutoff):
-        arr_after = list()
-        for item in arr_before:
-            if (item > cutoff):
-                arr_after.append(1)
-            else:
-                arr_after.append(0)
-        return arr_after
-    
-    
-    y_train_10 = to_list_of_lifetimes_after_cutoff(y_train,10)
-    print('y_train, cutoff 10')
-    print(Counter(y_train_10))
-    y_test_10 = to_list_of_lifetimes_after_cutoff(y_test,10)
-    print('y_test, cutoff 10')
-    print(Counter(y_test_10))
-    
-    y_train_25 = to_list_of_lifetimes_after_cutoff(y_train,25)
-    print('y_train, cutoff 25')
-    print(Counter(y_train_25))
-    y_test_25 = to_list_of_lifetimes_after_cutoff(y_test,25)
-    print('y_test, cutoff 25')
-    print(Counter(y_test_25))
-    
-    y_train_50 = to_list_of_lifetimes_after_cutoff(y_train,50)
-    print('y_train, cutoff 50')
-    print(Counter(y_train_50))
-    y_test_50 = to_list_of_lifetimes_after_cutoff(y_test,50)
-    print('y_test, cutoff 50')
-    print(Counter(y_test_50))
-    
-    
-    from sklearn import metrics
-    from sklearn.linear_model import LogisticRegression
-    
-    #LOGISTIC REGRESSION cutoff 10, 50
-    print('LOGISTIC REGRESSION cutoff 10')
-    model = LogisticRegression()
-    model.fit(X_train_50_features, y_train_10)
-    print(model)
-    # make predictions
-    expected = y_test_10
-    predicted = model.predict(X_test_50_features)
-    # summarize the fit of the model
-    print(metrics.classification_report(expected, predicted))
-    print(metrics.confusion_matrix(expected, predicted))
-    print('-----------------------------------')
-    
-    print('LOGISTIC REGRESSION cutoff 25')
-    model2 = LogisticRegression()
-    model2.fit(X_train_50_features, y_train_25)
-    print(model2)
-    # make predictions
-    expected = y_test_25
-    predicted = model2.predict(X_test_50_features)
-    # summarize the fit of the model
-    print(metrics.classification_report(expected, predicted))
-    print(metrics.confusion_matrix(expected, predicted))
-    print('-----------------------------------')
-    
-    #SVM
-    print('SVM_10')
-    from sklearn import svm
-    clf = svm.SVC(kernel='linear', C = 1.0)
-    clf.fit(X_train_50_features, y_train_10)
-    print(clf)
-    # make predictions
-    expected = y_test_10
-    predicted = clf.predict(X_test_50_features)
-    # summarize the fit of the model
-    print(metrics.classification_report(expected, predicted))
-    print(metrics.confusion_matrix(expected, predicted))
-    print('-----------------------------------')
-    
-    #Decision Tree
-    print('DecisionTree_10')
-    from sklearn import tree
-    clf = tree.DecisionTreeClassifier()
-    clf.fit(X_train_50_features, y_train_10)
-    print(clf)
-    # make predictions
-    expected = y_test_10
-    predicted = clf.predict(X_test_50_features)
-    # summarize the fit of the model
-    print(metrics.classification_report(expected, predicted))
-    print(metrics.confusion_matrix(expected, predicted))
-    print('-----------------------------------')
-    
-    #Random Forest
-    print('Random Forest_10')
-    from sklearn.ensemble import RandomForestClassifier
-    clf = RandomForestClassifier(n_estimators=100)
-    clf.fit(X_train_50_features, y_train_10)
-    print(clf)
-    # make predictions
-    expected = y_test_10
-    predicted = clf.predict(X_test_50_features)
-    # summarize the fit of the model
-    print(metrics.classification_report(expected, predicted))
-    print(metrics.confusion_matrix(expected, predicted))
-    print('-----------------------------------')
-    
-    
-    print('X_train_50 shape')
-    print(X_train_50_features.shape)
-    print('X_train_all_features shape')
-    print(X_train_all_features.shape)
-    print('X_test shape')
-    print(X_test_all_features.shape)
-    print('y_train len')
-    print(len(y_train))
-    print('y_test len')
-    print(len(y_test))
+#    from sklearn.feature_selection import chi2
+#    from sklearn.feature_selection import SelectKBest
+#    ch2 = SelectKBest(chi2, k=1500) #try to change that
+#    X_train_50_features = ch2.fit_transform(X_train_all_features, y_train)
+#    X_test_50_features = ch2.fit_transform(X_test_all_features, y_test)
+#    print(np.asarray(tf.get_feature_names())[ch2.get_support()])
+#    
+#    def to_list_of_lifetimes_after_cutoff(arr_before, cutoff):
+#        arr_after = list()
+#        for item in arr_before:
+#            if (item > cutoff):
+#                arr_after.append(1)
+#            else:
+#                arr_after.append(0)
+#        return arr_after
+#    
+#    
+#    y_train_10 = to_list_of_lifetimes_after_cutoff(y_train,10)
+#    print('y_train, cutoff 10')
+#    print(Counter(y_train_10))
+#    y_test_10 = to_list_of_lifetimes_after_cutoff(y_test,10)
+#    print('y_test, cutoff 10')
+#    print(Counter(y_test_10))
+#    
+#    y_train_25 = to_list_of_lifetimes_after_cutoff(y_train,25)
+#    print('y_train, cutoff 25')
+#    print(Counter(y_train_25))
+#    y_test_25 = to_list_of_lifetimes_after_cutoff(y_test,25)
+#    print('y_test, cutoff 25')
+#    print(Counter(y_test_25))
+#    
+#    y_train_50 = to_list_of_lifetimes_after_cutoff(y_train,50)
+#    print('y_train, cutoff 50')
+#    print(Counter(y_train_50))
+#    y_test_50 = to_list_of_lifetimes_after_cutoff(y_test,50)
+#    print('y_test, cutoff 50')
+#    print(Counter(y_test_50))
+#    
+#    
+#    from sklearn import metrics
+#    from sklearn.linear_model import LogisticRegression
+#    
+#    #LOGISTIC REGRESSION cutoff 10, 50
+#    print('LOGISTIC REGRESSION cutoff 10')
+#    model = LogisticRegression()
+#    model.fit(X_train_50_features, y_train_10)
+#    print(model)
+#    # make predictions
+#    expected = y_test_10
+#    predicted = model.predict(X_test_50_features)
+#    # summarize the fit of the model
+#    print(metrics.classification_report(expected, predicted))
+#    print(metrics.confusion_matrix(expected, predicted))
+#    print('-----------------------------------')
+#    
+#    print('LOGISTIC REGRESSION cutoff 25')
+#    model2 = LogisticRegression()
+#    model2.fit(X_train_50_features, y_train_25)
+#    print(model2)
+#    # make predictions
+#    expected = y_test_25
+#    predicted = model2.predict(X_test_50_features)
+#    # summarize the fit of the model
+#    print(metrics.classification_report(expected, predicted))
+#    print(metrics.confusion_matrix(expected, predicted))
+#    print('-----------------------------------')
+#    
+#    #SVM
+#    print('SVM_10')
+#    from sklearn import svm
+#    clf = svm.SVC(kernel='linear', C = 1.0)
+#    clf.fit(X_train_50_features, y_train_10)
+#    print(clf)
+#    # make predictions
+#    expected = y_test_10
+#    predicted = clf.predict(X_test_50_features)
+#    # summarize the fit of the model
+#    print(metrics.classification_report(expected, predicted))
+#    print(metrics.confusion_matrix(expected, predicted))
+#    print('-----------------------------------')
+#    
+#    #Decision Tree
+#    print('DecisionTree_10')
+#    from sklearn import tree
+#    clf = tree.DecisionTreeClassifier()
+#    clf.fit(X_train_50_features, y_train_10)
+#    print(clf)
+#    # make predictions
+#    expected = y_test_10
+#    predicted = clf.predict(X_test_50_features)
+#    # summarize the fit of the model
+#    print(metrics.classification_report(expected, predicted))
+#    print(metrics.confusion_matrix(expected, predicted))
+#    print('-----------------------------------')
+#    
+#    #Random Forest
+#    print('Random Forest_10')
+#    from sklearn.ensemble import RandomForestClassifier
+#    clf = RandomForestClassifier(n_estimators=100)
+#    clf.fit(X_train_50_features, y_train_10)
+#    print(clf)
+#    # make predictions
+#    expected = y_test_10
+#    predicted = clf.predict(X_test_50_features)
+#    # summarize the fit of the model
+#    print(metrics.classification_report(expected, predicted))
+#    print(metrics.confusion_matrix(expected, predicted))
+#    print('-----------------------------------')
+#    
+#    
+#    print('X_train_50 shape')
+#    print(X_train_50_features.shape)
+#    print('X_train_all_features shape')
+#    print(X_train_all_features.shape)
+#    print('X_test shape')
+#    print(X_test_all_features.shape)
+#    print('y_train len')
+#    print(len(y_train))
+#    print('y_test len')
+#    print(len(y_test))
