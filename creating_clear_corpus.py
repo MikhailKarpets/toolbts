@@ -245,7 +245,7 @@ list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags = list()
 arr_time_created_for_all_projects = list()
 arr_time_resolved_for_all_projects = list()
 
-for i in [1, 2, 3]:
+for i in [1,2,3]:
     str_path = "F:\\mike\\hse\\sem_2\\exactpro\\all_projects\\JBoss%d.csv" % i
     data = pd.read_csv(str_path)    
     
@@ -269,7 +269,7 @@ for i in [1, 2, 3]:
                                                        
 
     for k,item in enumerate(list_of_bugs_descriptions_and_stack_trace_flags):
-#        continue
+        continue
 #        if k < 1:
 #            continue
 #        if k == 2:
@@ -416,7 +416,13 @@ for item in list_tokens_with_stack_trace_flag:
     corpus0.append(temp_str)
 
 corpus = [i for j, i in enumerate(corpus0) if j not in arr_i]   
-    
+
+print('Length of corpus variable')
+print(len(corpus)) 
+
+print('Length of corpus0 variable')
+print(len(corpus0)) 
+          
 #228-241 must be commented!!!
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -425,8 +431,10 @@ from scipy.sparse.csr import csr_matrix #need this if you want to save tfidf_mat
 tf = TfidfVectorizer(input=corpus, ngram_range=(1,1), smooth_idf=True) #adding 1 to all term frequencies
 tfidf_matrix =  tf.fit_transform(corpus)
 feature_names = tf.get_feature_names()
+print('Length of feature names vector')
 print(len(feature_names))
-
+print('Shape of tf-idf sparse matrix tfidf_matrix')
+print(tfidf_matrix.shape)
 
 #doc = 1
 #feature_index = tfidf_matrix[doc,:].nonzero()[1]
@@ -445,12 +453,16 @@ print(len(feature_names))
 
 print('Number of all descriptions: ')
 print(len(list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags))
+print('Length of vector of time creations')
 print(len(arr_time_created_for_all_projects))
+print('Length of vector of time resolvations')
 print(len(arr_time_resolved_for_all_projects))
 
 
 #2122 - 228
+print('Length of vector pf bug reports lifetimes')
 print(len(list_of_bug_reports_lifetimes))
+print('Length of corpus variable')
 print(len(corpus))
 print('---------------------------------------------')
 
@@ -467,7 +479,9 @@ X_train_all_features, X_test_all_features, y_train, y_test = train_test_split(tf
 xls = pd.read_excel('F:\\mike\\hse\\sem_2\\exactpro\\jan_9_deskr\\JBoss_description_table_marked.xls')
 target_steps_to_repr = list(xls['steps to reproduce'][1:])
 target_exp_obs_beh = list(xls['expected/observed behavior'][1:])
+print('LENGTH TARGET ST TO REPR')
 print(len(target_steps_to_repr))
+print('LENGTH TARGET EXP OBS BEH')
 print(len(target_exp_obs_beh))
 
 tf_main_tokens = TfidfVectorizer(input=corpus0, ngram_range=(1,1), smooth_idf=True) #adding 1 to all term frequencies
@@ -477,6 +491,11 @@ print('NUMBER OF TOKENS FEATURE NAMES')
 print(len(feature_names_tokens))
 tfidf_matrix_main_tokens_dense = tfidf_matrix_main_tokens.toarray()
 
+print('Length of corpus0 variable')
+print(len(corpus0))
+print('Shape of tfidf_matrix_main_tokens matrix')
+print(tfidf_matrix_main_tokens.shape)
+
 tf_main_bigrams = TfidfVectorizer(input=corpus0, ngram_range=(2,2), smooth_idf=True) #adding 1 to all term frequencies
 tfidf_matrix_main_bigrams =  tf_main_bigrams.fit_transform(corpus0)
 feature_names_bigrams = tf_main_bigrams.get_feature_names()
@@ -484,16 +503,23 @@ print('NUMBER OF BIGRAMS FEATURE NAMES')
 print(len(feature_names_bigrams))
 tfidf_matrix_main_bigrams_dense = tfidf_matrix_main_bigrams.toarray()
 
-#START FEATURE SELECTION
+print('Shape of tfidf_matrix_main_tokens matrix')
+print(tfidf_matrix_main_bigrams.shape)
 
-#first mutual_info_classif method
+#START FEATURE SELECTION
 
 from sklearn.feature_selection import mutual_info_classif
 from sklearn.feature_selection import SelectKBest
 
 print('START FEATURE SELECTION FOR STEPS TO REPRODUCE TARGET VECTOR')
 for y_target in [target_steps_to_repr, target_exp_obs_beh]: 
+    break
+    #first mutual_info_classif method
     mutual_inf_cl = SelectKBest(mutual_info_classif, k=20)
+    
+    print(len(y_target))
+    print(tfidf_matrix_main_tokens.shape)
+    
     X_best_20_features_tokens = mutual_inf_cl.fit_transform(tfidf_matrix_main_tokens, y_target) #we need it in future to fit classifiers
     print(mutual_inf_cl.scores_)
     
