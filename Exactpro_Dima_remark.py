@@ -316,7 +316,7 @@ print(len(list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags)
 print('Len of list_of_vectorized_bugs')
 print(len(list_of_vectorized_bugs))
 
-print(col_num_of_comments)
+#print(col_num_of_comments)
 
 
 list_pos_see_attached = list()
@@ -546,61 +546,61 @@ from sklearn.cluster import KMeans
 from sklearn import metrics
 from sklearn.metrics import pairwise_distances
 
-kmeans_model = KMeans(n_clusters=7, random_state=0).fit(list_of_VB)
-labels = kmeans_model.labels_
-print(metrics.silhouette_score(list_of_VB, labels, metric='euclidean'))
+#kmeans_model = KMeans(n_clusters=7, random_state=0).fit(list_of_VB)
+#labels = kmeans_model.labels_
+#print(metrics.silhouette_score(list_of_VB, labels, metric='euclidean'))
 
-myset = set(labels)
-print(myset)
-#print(len(labels))
-print(labels)
-list_of_pos_69_percent_HAS_NOTHING_BUGS = list()
-list_of_pos_HAS_SOMETHING_BUGS = list()
-
-for i,item in enumerate(labels):
-    if item == 1:
-        list_of_pos_69_percent_HAS_NOTHING_BUGS.append(i)
-    else:
-        list_of_pos_HAS_SOMETHING_BUGS.append(i)
-print(len(list_of_pos_69_percent_HAS_NOTHING_BUGS))
-print(len(list_tokens_with_stack_trace_flag))
+#myset = set(labels)
+#print(myset)
+##print(len(labels))
+#print(labels)
+#list_of_pos_69_percent_HAS_NOTHING_BUGS = list()
+#list_of_pos_HAS_SOMETHING_BUGS = list()
+#
+#for i,item in enumerate(labels):
+#    if item == 1:
+#        list_of_pos_69_percent_HAS_NOTHING_BUGS.append(i)
+#    else:
+#        list_of_pos_HAS_SOMETHING_BUGS.append(i)
+#print(len(list_of_pos_69_percent_HAS_NOTHING_BUGS))
+#print(len(list_tokens_with_stack_trace_flag))
 list_tokens_after_lem = list()
 for item in list_tokens_with_stack_trace_flag:
     list_tokens_after_lem.append(item[0])
-list_tokens_after_lem_HAS_NOTHING_BUGS = list() #list for storing arrays of strings (arr <-> bug) HAS NOTHING
-list_tokens_after_lem_HAS_SOMETHING_BUGS = list() #list for storing arrays of strings (arr <-> bug) HAS SOMETHING
-for i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
-    list_tokens_after_lem_HAS_NOTHING_BUGS.append(list_tokens_after_lem[i])
-for i in list_of_pos_HAS_SOMETHING_BUGS:
-    list_tokens_after_lem_HAS_SOMETHING_BUGS.append(list_tokens_after_lem[i])
-print(len(list_tokens_after_lem_HAS_NOTHING_BUGS))
-print(len(list_tokens_after_lem_HAS_SOMETHING_BUGS))
-list_lens_HAS_NOTHING_BUGS = list()
-list_lens_HAS_SOMETHING_BUGS = list()
-for i,j in zip(list_tokens_after_lem_HAS_NOTHING_BUGS, list_tokens_after_lem_HAS_SOMETHING_BUGS):
-    list_lens_HAS_NOTHING_BUGS.append(len(i))
-    list_lens_HAS_SOMETHING_BUGS.append(len(j))
-list_al_tokens_from_BAD_BUGS = list()
-list_al_tokens_from_GOOD_BUGS = list()
-for i,j in zip(list_tokens_after_lem_HAS_NOTHING_BUGS, list_tokens_after_lem_HAS_SOMETHING_BUGS):
-    for k,v in zip(i,j):
-        list_al_tokens_from_BAD_BUGS.append(k)
-        list_al_tokens_from_GOOD_BUGS.append(v)
-keys_BAD = set(list_al_tokens_from_BAD_BUGS)
-num_toks_BAD = len(keys_BAD)
-keys_GOOD = set(list_al_tokens_from_GOOD_BUGS)
-num_toks_GOOD = len(keys_GOOD)
-values_arr_BAD = [list_al_tokens_from_BAD_BUGS.count(value)/num_toks_BAD for value in keys_BAD]
-dict_freq_BAD = {key: value for (key, value) in zip(keys_BAD,values_arr_BAD)}
-values_arr_GOOD = [list_al_tokens_from_GOOD_BUGS.count(value)/num_toks_GOOD for value in keys_GOOD]
-dict_freq_GOOD = {key: value for (key, value) in zip(keys_GOOD,values_arr_GOOD)}
-import operator
-sorted_dict_freq_BAD = sorted(dict_freq_BAD.items(), key=operator.itemgetter(1))
-sorted_dict_freq_GOOD = sorted(dict_freq_GOOD.items(), key=operator.itemgetter(1))
-sorted_toks_BAD = [k[0] for k in sorted_dict_freq_BAD]
-sorted_toks_GOOD = [k[0] for k in sorted_dict_freq_GOOD]
-sorted_toks_BAD = list(reversed(sorted_toks_BAD))
-sorted_toks_GOOD = list(reversed(sorted_toks_GOOD))
+#list_tokens_after_lem_HAS_NOTHING_BUGS = list() #list for storing arrays of strings (arr <-> bug) HAS NOTHING
+#list_tokens_after_lem_HAS_SOMETHING_BUGS = list() #list for storing arrays of strings (arr <-> bug) HAS SOMETHING
+#for i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
+#    list_tokens_after_lem_HAS_NOTHING_BUGS.append(list_tokens_after_lem[i])
+#for i in list_of_pos_HAS_SOMETHING_BUGS:
+#    list_tokens_after_lem_HAS_SOMETHING_BUGS.append(list_tokens_after_lem[i])
+#print(len(list_tokens_after_lem_HAS_NOTHING_BUGS))
+#print(len(list_tokens_after_lem_HAS_SOMETHING_BUGS))
+#list_lens_HAS_NOTHING_BUGS = list()
+#list_lens_HAS_SOMETHING_BUGS = list()
+#for i,j in zip(list_tokens_after_lem_HAS_NOTHING_BUGS, list_tokens_after_lem_HAS_SOMETHING_BUGS):
+#    list_lens_HAS_NOTHING_BUGS.append(len(i))
+#    list_lens_HAS_SOMETHING_BUGS.append(len(j))
+#list_al_tokens_from_BAD_BUGS = list()
+#list_al_tokens_from_GOOD_BUGS = list()
+#for i,j in zip(list_tokens_after_lem_HAS_NOTHING_BUGS, list_tokens_after_lem_HAS_SOMETHING_BUGS):
+#    for k,v in zip(i,j):
+#        list_al_tokens_from_BAD_BUGS.append(k)
+#        list_al_tokens_from_GOOD_BUGS.append(v)
+#keys_BAD = set(list_al_tokens_from_BAD_BUGS)
+#num_toks_BAD = len(keys_BAD)
+#keys_GOOD = set(list_al_tokens_from_GOOD_BUGS)
+#num_toks_GOOD = len(keys_GOOD)
+#values_arr_BAD = [list_al_tokens_from_BAD_BUGS.count(value)/num_toks_BAD for value in keys_BAD]
+#dict_freq_BAD = {key: value for (key, value) in zip(keys_BAD,values_arr_BAD)}
+#values_arr_GOOD = [list_al_tokens_from_GOOD_BUGS.count(value)/num_toks_GOOD for value in keys_GOOD]
+#dict_freq_GOOD = {key: value for (key, value) in zip(keys_GOOD,values_arr_GOOD)}
+#import operator
+#sorted_dict_freq_BAD = sorted(dict_freq_BAD.items(), key=operator.itemgetter(1))
+#sorted_dict_freq_GOOD = sorted(dict_freq_GOOD.items(), key=operator.itemgetter(1))
+#sorted_toks_BAD = [k[0] for k in sorted_dict_freq_BAD]
+#sorted_toks_GOOD = [k[0] for k in sorted_dict_freq_GOOD]
+#sorted_toks_BAD = list(reversed(sorted_toks_BAD))
+#sorted_toks_GOOD = list(reversed(sorted_toks_GOOD))
 
 #counter_attached_BAD = 0
 #pos_attached_BAD = list()
@@ -670,60 +670,60 @@ pattern_xml = re.compile('\.xml')
 #print(attach_2122[0])
 #print(attach_2122)    
     
-for i,item in enumerate(attach_2122): #создаём массив позиций аттачей с паттернами
-    if type(item) == float:
-        continue
-    if pattern_log_ldif_war.search(item):
-        list_log_ldif_war.append(i)
-    if pattern_im.search(item):
-        list_pos_im.append(i)
-    if pattern_arch.search(item):
-        list_pos_arch.append(i)
-    if pattern_xml.search(item):
-        list_pos_xml.append(i)
-    
-for i,item in enumerate(attach_2122_1): #создаём массив позиций аттачей с паттернами
-    if type(item) == float:
-        continue
-    if pattern_log_ldif_war.search(item):
-        list_log_ldif_war.append(i)
-    if pattern_im.search(item):
-        list_pos_im.append(i)
-    if pattern_arch.search(item):
-        list_pos_arch.append(i)
-    if pattern_xml.search(item):
-        list_pos_xml.append(i)   
-
-#sets с позициями
-set_list_pos_im = set(list_pos_im)  
-set_list_pos_arch = set(list_pos_arch)
-set_list_log_ldif_war = set(list_log_ldif_war)  
-set_list_pos_xml = set(list_pos_xml)
-set_list_pos_see_attached = set(list_pos_see_attached)
-set_list_of_pos_69_percent_HAS_NOTHING_BUGS = set(list_of_pos_69_percent_HAS_NOTHING_BUGS)
-set_list_of_pos_HAS_SOMETHING_BUGS = set(list_of_pos_HAS_SOMETHING_BUGS)
-
-#print("col_num_of_comments")
-#for i in col_num_of_comments:
-#    print(i)
-
-col_num_of_comments_BAD = list()
-col_num_of_comments_GOOD = list()
-for i,item in enumerate(num_comment_2122): 
-    if i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
-        col_num_of_comments_BAD.append(item)
-    else:
-        col_num_of_comments_GOOD.append(item)
-   
-        
-print('Comments BAD median')
-print(np.median(col_num_of_comments_BAD))
-print('Comments BAD std')
-print(np.std(col_num_of_comments_BAD))
-print('Comments GOOD median')
-print(np.median(col_num_of_comments_GOOD))
-print('Comments GOOD std')
-print(np.std(col_num_of_comments_GOOD))
+#for i,item in enumerate(attach_2122): #создаём массив позиций аттачей с паттернами
+#    if type(item) == float:
+#        continue
+#    if pattern_log_ldif_war.search(item):
+#        list_log_ldif_war.append(i)
+#    if pattern_im.search(item):
+#        list_pos_im.append(i)
+#    if pattern_arch.search(item):
+#        list_pos_arch.append(i)
+#    if pattern_xml.search(item):
+#        list_pos_xml.append(i)
+#    
+#for i,item in enumerate(attach_2122_1): #создаём массив позиций аттачей с паттернами
+#    if type(item) == float:
+#        continue
+#    if pattern_log_ldif_war.search(item):
+#        list_log_ldif_war.append(i)
+#    if pattern_im.search(item):
+#        list_pos_im.append(i)
+#    if pattern_arch.search(item):
+#        list_pos_arch.append(i)
+#    if pattern_xml.search(item):
+#        list_pos_xml.append(i)   
+#
+##sets с позициями
+#set_list_pos_im = set(list_pos_im)  
+#set_list_pos_arch = set(list_pos_arch)
+#set_list_log_ldif_war = set(list_log_ldif_war)  
+#set_list_pos_xml = set(list_pos_xml)
+#set_list_pos_see_attached = set(list_pos_see_attached)
+#set_list_of_pos_69_percent_HAS_NOTHING_BUGS = set(list_of_pos_69_percent_HAS_NOTHING_BUGS)
+#set_list_of_pos_HAS_SOMETHING_BUGS = set(list_of_pos_HAS_SOMETHING_BUGS)
+#
+##print("col_num_of_comments")
+##for i in col_num_of_comments:
+##    print(i)
+#
+#col_num_of_comments_BAD = list()
+#col_num_of_comments_GOOD = list()
+#for i,item in enumerate(num_comment_2122): 
+#    if i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
+#        col_num_of_comments_BAD.append(item)
+#    else:
+#        col_num_of_comments_GOOD.append(item)
+#   
+#        
+#print('Comments BAD median')
+#print(np.median(col_num_of_comments_BAD))
+#print('Comments BAD std')
+#print(np.std(col_num_of_comments_BAD))
+#print('Comments GOOD median')
+#print(np.median(col_num_of_comments_GOOD))
+#print('Comments GOOD std')
+#print(np.std(col_num_of_comments_GOOD))
 
 #print(len(col_num_of_comments_BAD))
 #print("col_num_of_comments_BAD")
@@ -732,177 +732,177 @@ print(np.std(col_num_of_comments_GOOD))
 #for i in col_num_of_comments_GOOD:
 #    print(i)
 
-counter_im_BAD = list()
-counter_arch_BAD = list()
-counter_log_ldif_war_BAD = list()
-counter_xml_BAD = list()
-counter_see_attached_BAD = list()
-
-counter_im_GOOD = list()
-counter_arch_GOOD = list()
-counter_log_ldif_war_GOOD = list()
-counter_xml_GOOD = list()
-counter_see_attached_GOOD = list()
-
-for item in list_of_pos_69_percent_HAS_NOTHING_BUGS:
-    if item in list_pos_im:
-        counter_im_BAD.append(item)
-    if item in list_pos_arch:
-        counter_arch_BAD.append(item)
-    if item in list_log_ldif_war:
-        counter_log_ldif_war_BAD.append(item)
-    if item in list_pos_xml:
-        counter_xml_BAD.append(item)
-    if item in list_pos_see_attached:
-        counter_see_attached_BAD.append(item)
-
-for item in list_of_pos_HAS_SOMETHING_BUGS:
-    if item in list_pos_im:
-        counter_im_GOOD.append(item)
-    if item in list_pos_arch:
-        counter_arch_GOOD.append(item)
-    if item in list_log_ldif_war:
-        counter_log_ldif_war_GOOD.append(item)
-    if item in list_pos_xml:
-        counter_xml_GOOD.append(item)
-    if item in list_pos_see_attached:
-        counter_see_attached_GOOD.append(item)        
-
-list_something_GOOD = list()
-for item in list_of_pos_HAS_SOMETHING_BUGS:
-    if (item in counter_im_GOOD) or (item in counter_arch_GOOD) or (item in counter_log_ldif_war_GOOD) or (item in counter_xml_GOOD) or (item in counter_see_attached_GOOD):
-        list_something_GOOD.append(item)
-
-list_something_BAD = list()
-for item in list_of_pos_69_percent_HAS_NOTHING_BUGS:
-    if (item in counter_im_BAD) or (item in counter_arch_BAD) or (item in counter_log_ldif_war_BAD) or (item in counter_xml_BAD) or (item in counter_see_attached_BAD):
-        list_something_BAD.append(item)        
-
-print('BAD with something')
-print(len(list_something_BAD))
-
-print('GOOD with something')
-print(len(list_something_GOOD))
-
-corpus_BAD = list()
-for item in list_tokens_after_lem_HAS_NOTHING_BUGS:
-    corpus_BAD.append(' '.join(item))                
-corpus_GOOD = list()
-for item in list_tokens_after_lem_HAS_SOMETHING_BUGS:
-    corpus_GOOD.append(' '.join(item))
-
-#print(corpus_BAD)
-#print(corpus_GOOD)
+#counter_im_BAD = list()
+#counter_arch_BAD = list()
+#counter_log_ldif_war_BAD = list()
+#counter_xml_BAD = list()
+#counter_see_attached_BAD = list()
+#
+#counter_im_GOOD = list()
+#counter_arch_GOOD = list()
+#counter_log_ldif_war_GOOD = list()
+#counter_xml_GOOD = list()
+#counter_see_attached_GOOD = list()
+#
+#for item in list_of_pos_69_percent_HAS_NOTHING_BUGS:
+#    if item in list_pos_im:
+#        counter_im_BAD.append(item)
+#    if item in list_pos_arch:
+#        counter_arch_BAD.append(item)
+#    if item in list_log_ldif_war:
+#        counter_log_ldif_war_BAD.append(item)
+#    if item in list_pos_xml:
+#        counter_xml_BAD.append(item)
+#    if item in list_pos_see_attached:
+#        counter_see_attached_BAD.append(item)
+#
+#for item in list_of_pos_HAS_SOMETHING_BUGS:
+#    if item in list_pos_im:
+#        counter_im_GOOD.append(item)
+#    if item in list_pos_arch:
+#        counter_arch_GOOD.append(item)
+#    if item in list_log_ldif_war:
+#        counter_log_ldif_war_GOOD.append(item)
+#    if item in list_pos_xml:
+#        counter_xml_GOOD.append(item)
+#    if item in list_pos_see_attached:
+#        counter_see_attached_GOOD.append(item)        
+#
+#list_something_GOOD = list()
+#for item in list_of_pos_HAS_SOMETHING_BUGS:
+#    if (item in counter_im_GOOD) or (item in counter_arch_GOOD) or (item in counter_log_ldif_war_GOOD) or (item in counter_xml_GOOD) or (item in counter_see_attached_GOOD):
+#        list_something_GOOD.append(item)
+#
+#list_something_BAD = list()
+#for item in list_of_pos_69_percent_HAS_NOTHING_BUGS:
+#    if (item in counter_im_BAD) or (item in counter_arch_BAD) or (item in counter_log_ldif_war_BAD) or (item in counter_xml_BAD) or (item in counter_see_attached_BAD):
+#        list_something_BAD.append(item)        
+#
+#print('BAD with something')
+#print(len(list_something_BAD))
+#
+#print('GOOD with something')
+#print(len(list_something_GOOD))
+#
+#corpus_BAD = list()
+#for item in list_tokens_after_lem_HAS_NOTHING_BUGS:
+#    corpus_BAD.append(' '.join(item))                
+#corpus_GOOD = list()
+#for item in list_tokens_after_lem_HAS_SOMETHING_BUGS:
+#    corpus_GOOD.append(' '.join(item))
+#
+##print(corpus_BAD)
+##print(corpus_GOOD)
 
 
 import nltk
 from collections import Counter
 
-list_VB_percentage_BAD = list()
-for item in corpus_BAD:
-    tagged = nltk.pos_tag(item)
-    counts = Counter(tag for word,tag in tagged)
-    total = sum(counts.values())
-    temp_d = dict((word, float(count)/total) for word,count in counts.items())    
-    list_VB_percentage_BAD.append(temp_d.get('VB'))
+#list_VB_percentage_BAD = list()
+#for item in corpus_BAD:
+#    tagged = nltk.pos_tag(item)
+#    counts = Counter(tag for word,tag in tagged)
+#    total = sum(counts.values())
+#    temp_d = dict((word, float(count)/total) for word,count in counts.items())    
+#    list_VB_percentage_BAD.append(temp_d.get('VB'))
+#
+#list_VB_percentage_GOOD = list()
+#for item in corpus_GOOD:
+#    tagged = nltk.pos_tag(item)
+#    counts = Counter(tag for word,tag in tagged)
+#    total = sum(counts.values())
+#    temp_d = dict((word, float(count)/total) for word,count in counts.items())    
+#    list_VB_percentage_GOOD.append(temp_d.get('VB'))
+#
+#for i,item in  enumerate(list_VB_percentage_BAD):
+#    if type(item) != float:
+#        list_VB_percentage_BAD[i] = 0
+#
+#for i,item in  enumerate(list_VB_percentage_GOOD):
+#    if type(item) != float:
+#        list_VB_percentage_GOOD[i] = 0
+#    
+#print(type(list_VB_percentage_BAD[1]))    
+#    
+#print('BAD Verbs mean')
+#print(np.mean(list_VB_percentage_BAD))
+#print('BAD Verbs median')
+#print(np.median(list_VB_percentage_BAD))
+#print('BAD Verbs std')
+#print(np.std(list_VB_percentage_BAD)) 
+#
+#print('GOOD Verbs mean')
+#print(np.mean(list_VB_percentage_GOOD))
+#print('GOOD Verbs median')
+#print(np.median(list_VB_percentage_GOOD))
+#print('GOOD Verbs std')
+#print(np.std(list_VB_percentage_GOOD)) 
+#
+#FKG_BAD = list()
+#FKG_GOOD = list()
+#for i,item in enumerate(flesch_kincaid_grade_list):
+#    if i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
+#        FKG_BAD.append(item)
+#    else:    
+#        FKG_GOOD.append(item)
+#print('BAD FKG mean')
+#print(np.mean(FKG_BAD))        
+#print('BAD FKG median')
+#print(np.median(FKG_BAD))
+#print('BAD STD')  
+#print(np.std(FKG_BAD))
+#
+#print('GOOD FKG mean')
+#print(np.mean(FKG_GOOD))        
+#print('GOOD FKG median')
+#print(np.median(FKG_GOOD))  
+#print('GOOD STD')
+#print(np.std(FKG_GOOD))
+#
+#
+#FRE_BAD = list()
+#FRE_GOOD = list()
+#for i,item in enumerate(flesch_reading_ease_list):
+#    if i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
+#        FRE_BAD.append(item)
+#    else:    
+#        FRE_GOOD.append(item)
 
-list_VB_percentage_GOOD = list()
-for item in corpus_GOOD:
-    tagged = nltk.pos_tag(item)
-    counts = Counter(tag for word,tag in tagged)
-    total = sum(counts.values())
-    temp_d = dict((word, float(count)/total) for word,count in counts.items())    
-    list_VB_percentage_GOOD.append(temp_d.get('VB'))
-
-for i,item in  enumerate(list_VB_percentage_BAD):
-    if type(item) != float:
-        list_VB_percentage_BAD[i] = 0
-
-for i,item in  enumerate(list_VB_percentage_GOOD):
-    if type(item) != float:
-        list_VB_percentage_GOOD[i] = 0
-    
-print(type(list_VB_percentage_BAD[1]))    
-    
-print('BAD Verbs mean')
-print(np.mean(list_VB_percentage_BAD))
-print('BAD Verbs median')
-print(np.median(list_VB_percentage_BAD))
-print('BAD Verbs std')
-print(np.std(list_VB_percentage_BAD)) 
-
-print('GOOD Verbs mean')
-print(np.mean(list_VB_percentage_GOOD))
-print('GOOD Verbs median')
-print(np.median(list_VB_percentage_GOOD))
-print('GOOD Verbs std')
-print(np.std(list_VB_percentage_GOOD)) 
-
-FKG_BAD = list()
-FKG_GOOD = list()
-for i,item in enumerate(flesch_kincaid_grade_list):
-    if i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
-        FKG_BAD.append(item)
-    else:    
-        FKG_GOOD.append(item)
-print('BAD FKG mean')
-print(np.mean(FKG_BAD))        
-print('BAD FKG median')
-print(np.median(FKG_BAD))
-print('BAD STD')  
-print(np.std(FKG_BAD))
-
-print('GOOD FKG mean')
-print(np.mean(FKG_GOOD))        
-print('GOOD FKG median')
-print(np.median(FKG_GOOD))  
-print('GOOD STD')
-print(np.std(FKG_GOOD))
-
-
-FRE_BAD = list()
-FRE_GOOD = list()
-for i,item in enumerate(flesch_reading_ease_list):
-    if i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
-        FRE_BAD.append(item)
-    else:    
-        FRE_GOOD.append(item)
-
-DCR_BAD = list()
-DCR_GOOD = list()
-for i,item in enumerate(dale_chall_readability_score_list):
-    if i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
-        DCR_BAD.append(item)
-    else:    
-        DCR_GOOD.append(item)      
-
-print('BAD FRE mean')
-print(np.mean(FRE_BAD))        
-print('BAD FRE median')
-print(np.median(FRE_BAD))
-print('BAD FRE STD')  
-print(np.std(FRE_BAD))
-
-print('GOOD FRE mean')
-print(np.mean(FRE_GOOD))        
-print('GOOD FRE median')
-print(np.median(FRE_GOOD))  
-print('GOOD FRE STD')
-print(np.std(FRE_GOOD))
-
-print('BAD DCR mean')
-print(np.mean(DCR_BAD))        
-print('BAD DCR median')
-print(np.median(DCR_BAD))
-print('BAD DCR STD')  
-print(np.std(DCR_BAD))
-
-print('GOOD DCR mean')
-print(np.mean(DCR_GOOD))        
-print('GOOD DCR median')
-print(np.median(DCR_GOOD))  
-print('GOOD DCR STD')
-print(np.std(DCR_GOOD))
+#DCR_BAD = list()
+#DCR_GOOD = list()
+#for i,item in enumerate(dale_chall_readability_score_list):
+#    if i in list_of_pos_69_percent_HAS_NOTHING_BUGS:
+#        DCR_BAD.append(item)
+#    else:    
+#        DCR_GOOD.append(item)      
+#
+#print('BAD FRE mean')
+#print(np.mean(FRE_BAD))        
+#print('BAD FRE median')
+#print(np.median(FRE_BAD))
+#print('BAD FRE STD')  
+#print(np.std(FRE_BAD))
+#
+#print('GOOD FRE mean')
+#print(np.mean(FRE_GOOD))        
+#print('GOOD FRE median')
+#print(np.median(FRE_GOOD))  
+#print('GOOD FRE STD')
+#print(np.std(FRE_GOOD))
+#
+#print('BAD DCR mean')
+#print(np.mean(DCR_BAD))        
+#print('BAD DCR median')
+#print(np.median(DCR_BAD))
+#print('BAD DCR STD')  
+#print(np.std(DCR_BAD))
+#
+#print('GOOD DCR mean')
+#print(np.mean(DCR_GOOD))        
+#print('GOOD DCR median')
+#print(np.median(DCR_GOOD))  
+#print('GOOD DCR STD')
+#print(np.std(DCR_GOOD))
 
 word_quantity_list = list()
 for item in list_tokens_after_lem:
@@ -1025,6 +1025,16 @@ std_8 = np.std(ftr_stack_trace_list)
 print("-------------------NEW FEATURES------------------") 
 list_of_vectorized_bugs_9 = list()
 list_of_vectorized_bugs_9_unnorm = list()
+list_of_vectorized_bugs_9_norm_quantw_comm_verbs = list()
+min_QWords = min(word_quantity_list)
+max_QWords = max(word_quantity_list)
+min_QComm = min(num_comment_2122)
+max_QComm = max(num_comment_2122)
+min_PersVerbs = min(ftr_VB_percentage_list)
+max_PersVerbs = max(ftr_VB_percentage_list)
+word_quantity_list_0_1 = [(x - min_QWords)/(max_QWords - min_QWords) for x in word_quantity_list] 
+num_comment_2122_0_1 = [(x - min_QComm)/(max_QComm - min_QComm) for x in num_comment_2122]
+ftr_VB_percentage_list_0_1 = [(x - min_PersVerbs)/(max_PersVerbs - min_PersVerbs) for x in ftr_VB_percentage_list]
 for i in range(2122):
     list_of_vectorized_bugs_9.append([ (word_quantity_list[i] - mean_0)/std_0,
                                         (ftr_logs_arch_list[i] - mean_1)/std_1,
@@ -1044,6 +1054,15 @@ for i in range(2122):
                                     target_steps_to_repr[i],
                                     target_exp_obs_beh[i],
                                     ftr_stack_trace_list[i] ])
+    list_of_vectorized_bugs_9_norm_quantw_comm_verbs.append([ word_quantity_list_0_1[i],
+                                    ftr_logs_arch_list[i],
+                                    ftr_im_list[i],
+                                    num_comment_2122_0_1[i],
+                                    ftr_xml_list[i],
+                                    ftr_VB_percentage_list_0_1[i],
+                                    target_steps_to_repr[i],
+                                    target_exp_obs_beh[i],
+                                    ftr_stack_trace_list[i] ])
     
     
 
@@ -1054,11 +1073,12 @@ print(len(list_of_vectorized_bugs_9))
 #АГГЛОМЕРАТИВНАЯ КЛАСТЕРИЗАЦИЯ (иерархическая?)    
 from sklearn.cluster import AgglomerativeClustering    
     
-AC_model = AgglomerativeClustering(n_clusters=16).fit(list_of_vectorized_bugs_9)
+AC_model = KMeans(n_clusters=13).fit(list_of_vectorized_bugs_9_norm_quantw_comm_verbs)
 labels_9 = AC_model.labels_
-children_9 = AC_model.children_
-n_leaves_9 = AC_model.n_leaves_
-print(metrics.silhouette_score(list_of_vectorized_bugs_9, labels_9, metric='euclidean'))
+#children_9 = AC_model.children_
+#n_leaves_9 = AC_model.n_leaves_
+print("Siluette index")
+print(metrics.silhouette_score(list_of_vectorized_bugs_9_norm_quantw_comm_verbs, labels_9, metric='euclidean'))
 
 myset_9 = set(labels_9)
 print("myset_9")
@@ -1066,10 +1086,10 @@ print(myset_9)
 print("labels_9")
 print(len(labels_9))
 print(labels_9)
-print("n_leaves_9")
-print(n_leaves_9)
-print("children_9")
-print(children_9)
+#print("n_leaves_9")
+#print(n_leaves_9)
+#print("children_9")
+#print(children_9)
 
 list_vb_0 = list()
 list_vb_1 = list()
@@ -1121,21 +1141,113 @@ for i,item in enumerate(labels_9):
     if item == 15:
         list_vb_15.append(list_of_vectorized_bugs_9_unnorm[i])    
 
-list_vb = [list_vb_0,list_vb_1,list_vb_2,list_vb_3,list_vb_4,list_vb_5,list_vb_6,list_vb_7,list_vb_8,list_vb_9,list_vb_10,list_vb_11,list_vb_12,list_vb_13,list_vb_14,list_vb_15]
-
-
+list_vb = [list_vb_0,list_vb_1,list_vb_2,list_vb_3,list_vb_4,list_vb_5,list_vb_6,list_vb_7,list_vb_8,list_vb_9,list_vb_10,list_vb_11,list_vb_12]
+#,list_vb_13,list_vb_14,list_vb_15]
 
 print("h")
 
 for i,item in enumerate(list_vb):
+    if len(item) == 0:
+        print(i)
+        print("no bugs in this cluster")
+        continue
     print("-------CLUSTER-----------")
     print(i)  
-    for j in range(8):
+    for j in range(9):
         print(j)
-        print("median")
+#        print(item)
+#        print("median")
         temp_item = np.array(item)
         temp_AC = temp_item[:,j]
         print(np.median(temp_AC))
+
+count_0 = 0
+count_1 = 0
+count_2 = 0
+count_3 = 0
+count_4 = 0        
+count_5 = 0
+count_6 = 0
+count_7 = 0
+count_8 = 0
+count_9 = 0
+count_10 = 0
+count_11 = 0
+count_12 = 0
+count_13 = 0
+count_14 = 0        
+count_15 = 0
+for i in labels_9:
+    if i == 0:
+        count_0 += 1
+    if i == 1:
+        count_1 += 1
+    if i == 2:
+        count_2 += 1
+    if i == 3:
+        count_3 += 1
+    if i == 4:
+        count_4 += 1
+    if i == 5:
+        count_5 += 1
+    if i == 6:
+        count_6 += 1
+    if i == 7:
+        count_7 += 1
+    if i == 8:
+        count_8 += 1
+    if i == 9:
+        count_9 += 1
+    if i == 10:
+        count_10 += 1
+    if i == 11:
+        count_11 += 1
+    if i == 12:
+        count_12 += 1
+    if i == 13:
+        count_13 += 1
+    if i == 14:
+        count_14 += 1
+    if i == 15:
+        count_15 += 1
+#        
+print("0--")
+print(count_0)        
+print("1--")
+print(count_1)
+print("2--")
+print(count_2)        
+print("3--")
+print(count_3)
+print("4--")
+print(count_4)        
+print("5--")
+print(count_5)
+print("6--")
+print(count_6)        
+print("7--")
+print(count_7)
+print("8--")
+print(count_8)        
+print("9--")
+print(count_9)
+print("10--")
+print(count_10)        
+print("11--")
+print(count_11)
+print("12--")
+print(count_12)        
+print("13--")
+print(count_13)
+print("14--")
+print(count_14)        
+print("15--")
+print(count_15)
+
+print("------------------------")
+
+#for i in labels_9:
+#    print(i)
         
 #set_im_BAD =  set_list_of_pos_69_percent_HAS_NOTHING_BUGS.intersection(set_list_pos_im)
 #set_arch_BAD = set_list_of_pos_69_percent_HAS_NOTHING_BUGS.intersection(set_list_pos_arch)
