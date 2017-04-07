@@ -319,24 +319,6 @@ print(len(list_of_vectorized_bugs))
 #print(col_num_of_comments)
 
 
-list_pos_see_attached = list()
-pattern_see = re.compile('\ssee\s|\sSee\s')
-pattern_attached = re.compile('\sattached\s|\sAttached\s')
-pattern_log_ldif_war = re.compile('\.log|\.ldif|\.war')
-pattern_im = re.compile('\.bmp|\.cpt|\.gif|\.hdr|\.jpeg|\.jpg|\.jpe|\.jp2|\.pcx|\.pdf|\.pdn|\.png|\.psd|\.tga|\.tpic|\.tiff|\.tif|\.wdp|\.hdp|\.xpm')
-pattern_arch = re.compile('\.7z|\.ace|\.arj|\.bz2|\.cab|\.cpio|\.deb|\.gz|\.jar|\.lzh|\.lzo|\.lzh|\.rar|\.rpm|\.tar|\.xz|\.zip|\.zoo')
-pattern_xml = re.compile('\.xml')
-for k,text in enumerate(list_total_texts):
-    if pattern_im.search(text):
-        list_pos_im.append(k)
-    if pattern_arch.search(text):
-        list_pos_arch.append(k)
-    if pattern_xml.search(text):
-        list_pos_xml.append(k)
-    if pattern_log_ldif_war.search(text):
-        list_log_ldif_war.append(k)
-    if (pattern_see.search(text) or pattern_attached.search(text)):
-        list_pos_see_attached.append(k)
         
 
 #from textatistic import Textatistic 
@@ -659,11 +641,66 @@ for item in col_attachments_1:
 for item in col_num_of_comments:
     num_comment_2122 = num_comment_2122 + item
 
+#pattern_log_ldif_war = re.compile('\.log|\.ldif|\.war')
+#pattern_im = re.compile('\.bmp|\.cpt|\.gif|\.hdr|\.jpeg|\.jpg|\.jpe|\.jp2|\.pcx|\.pdf|\.pdn|\.png|\.psd|\.tga|\.tpic|\.tiff|\.tif|\.wdp|\.hdp|\.xpm')
+#pattern_arch = re.compile('\.7z|\.ace|\.arj|\.bz2|\.cab|\.cpio|\.deb|\.gz|\.jar|\.lzh|\.lzo|\.lzh|\.rar|\.rpm|\.tar|\.xz|\.zip|\.zoo')
+#pattern_xml = re.compile('\.xml')
+
+
+list_pos_see_attached = list()
+pattern_see = re.compile('\ssee\s|\sSee\s')
+pattern_attached = re.compile('\sattached\s|\sAttached\s')
 pattern_log_ldif_war = re.compile('\.log|\.ldif|\.war')
 pattern_im = re.compile('\.bmp|\.cpt|\.gif|\.hdr|\.jpeg|\.jpg|\.jpe|\.jp2|\.pcx|\.pdf|\.pdn|\.png|\.psd|\.tga|\.tpic|\.tiff|\.tif|\.wdp|\.hdp|\.xpm')
 pattern_arch = re.compile('\.7z|\.ace|\.arj|\.bz2|\.cab|\.cpio|\.deb|\.gz|\.jar|\.lzh|\.lzo|\.lzh|\.rar|\.rpm|\.tar|\.xz|\.zip|\.zoo')
 pattern_xml = re.compile('\.xml')
+for k,text in enumerate(list_total_texts):
+    if pattern_im.search(text):
+        list_pos_im.append(k)
+    if pattern_arch.search(text):
+        list_pos_arch.append(k)
+    if pattern_xml.search(text):
+        list_pos_xml.append(k)
+    if pattern_log_ldif_war.search(text):
+        list_log_ldif_war.append(k)
+    if (pattern_see.search(text) or pattern_attached.search(text)):
+        list_pos_see_attached.append(k)
 
+#print("attach_2122")
+#print(attach_2122)
+def isnan(obj):
+    return obj != obj
+#print(isnan(attach_2122[0]))    
+#print(isnan(attach_2122[1]))
+
+for i,item in enumerate(attach_2122):
+    if isnan(item):
+        attach_2122[i] = ''
+
+for i,item in enumerate(attach_2122_1):
+    if isnan(item):
+        attach_2122_1[i] = ''
+        
+for k,attach in enumerate(attach_2122):
+    if pattern_im.search(attach):
+        list_pos_im.append(k)
+    if pattern_arch.search(attach):
+        list_pos_arch.append(k)
+    if pattern_xml.search(attach):
+        list_pos_xml.append(k)
+    if pattern_log_ldif_war.search(attach):
+        list_log_ldif_war.append(k)         
+
+for k,attach in enumerate(attach_2122_1):
+    if pattern_im.search(attach):
+        list_pos_im.append(k)
+    if pattern_arch.search(attach):
+        list_pos_arch.append(k)
+    if pattern_xml.search(attach):
+        list_pos_xml.append(k)
+    if pattern_log_ldif_war.search(attach):
+        list_log_ldif_war.append(k)         
+        
 #print(type(attach_2122))
 #print(len(attach_2122))
 #print(type(attach_2122[0]))
@@ -928,22 +965,48 @@ for i in range(2122):
         ftr_xml_list.append(1)
     else:
         ftr_xml_list.append(0)         
- 
+
+#print("list_tokens_after_lem")
+#print(list_tokens_after_lem)        
+        
 corpus_strings_tokens_after_lem = list()
 for item in list_tokens_after_lem:
     corpus_strings_tokens_after_lem.append(' '.join(item))                
 
 ftr_VB_percentage_list = list()
-for item in corpus_strings_tokens_after_lem:
+tags_VB_nltk = ['VB','VBD','VBG','VBZ','VBP','VBN']
+#list_tag_VB = list()
+#list_tag_VBD = list()
+#list_tag_VBG = list()
+#list_tag_VBZ = list()
+#list_tag_VBP = list()
+#list_tag_VBN = list()
+temp_dict = dict()
+for item in list_tokens_after_lem:
     tagged = nltk.pos_tag(item)
     counts = Counter(tag for word,tag in tagged)
     total = sum(counts.values())
-    temp_d = dict((word, float(count)/total) for word,count in counts.items())    
-    ftr_VB_percentage_list.append(temp_d.get('VB'))        
+    temp_d = dict((word, float(count)/total) for word,count in counts.items())
+    list_tag_VB = list()
+    list_tag_VBD = list()
+#list_tag_VBG = list()
+#list_tag_VBZ = list()
+#list_tag_VBP = list()
+#list_tag_VBN = list()
+#    print(sum(temp_d.values()))
+#    temp_dict.update(temp_d)
+    temp_vb_freq_list = [temp_d.get("VB"),temp_d.get("VBD"),temp_d.get("VBG"),temp_d.get("VBZ"),temp_d.get("VBP"),temp_d.get("VBN")]    
+    for j,obj in enumerate(temp_vb_freq_list):
+        if type(obj) is not (float or int):
+            temp_vb_freq_list[j] = 0
+    ftr_VB_percentage_list.append(sum(temp_vb_freq_list))        
 
-for i,item in enumerate(ftr_VB_percentage_list):
-    if item is None:
-        ftr_VB_percentage_list[i] = 0
+print("dict=================================")
+#print(temp_dict)    
+    
+#for i,item in enumerate(ftr_VB_percentage_list):
+#    if item is None:
+#        ftr_VB_percentage_list[i] = 0
 
 ftr_stack_trace_list = list()
 for item in list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flags:
@@ -1003,6 +1066,15 @@ for item in list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flag
 #17) бинарный массив EOB 2122 target_exp_obs_beh          7
 #18) бинарный массив ST 2122 ftr_stack_trace_list         8
 
+print("IMAGES")
+print(len(ftr_im_list)) 
+print(sum(ftr_im_list))
+#print(ftr_im_list)   
+print('===============================')
+print('VB perc')
+print(len(ftr_VB_percentage_list))
+print(sum(ftr_VB_percentage_list))
+    
 mean_0 = np.mean(word_quantity_list)    
 std_0 = np.std(word_quantity_list)    
 mean_1 = np.mean(ftr_logs_arch_list)    
@@ -1072,13 +1144,13 @@ print(len(list_of_vectorized_bugs_9))
 
 #АГГЛОМЕРАТИВНАЯ КЛАСТЕРИЗАЦИЯ (иерархическая?)    
 from sklearn.cluster import AgglomerativeClustering    
-    
-AC_model = KMeans(n_clusters=13).fit(list_of_vectorized_bugs_9_norm_quantw_comm_verbs)
+
+AC_model = AgglomerativeClustering(n_clusters=14,linkage = 'complete', affinity = 'l1').fit(list_of_vectorized_bugs_9_norm_quantw_comm_verbs)
 labels_9 = AC_model.labels_
 #children_9 = AC_model.children_
 #n_leaves_9 = AC_model.n_leaves_
 print("Siluette index")
-print(metrics.silhouette_score(list_of_vectorized_bugs_9_norm_quantw_comm_verbs, labels_9, metric='euclidean'))
+print(metrics.silhouette_score(list_of_vectorized_bugs_9_norm_quantw_comm_verbs, labels_9))
 
 myset_9 = set(labels_9)
 print("myset_9")
@@ -1141,10 +1213,29 @@ for i,item in enumerate(labels_9):
     if item == 15:
         list_vb_15.append(list_of_vectorized_bugs_9_unnorm[i])    
 
-list_vb = [list_vb_0,list_vb_1,list_vb_2,list_vb_3,list_vb_4,list_vb_5,list_vb_6,list_vb_7,list_vb_8,list_vb_9,list_vb_10,list_vb_11,list_vb_12]
-#,list_vb_13,list_vb_14,list_vb_15]
+list_vb = [list_vb_0,list_vb_1,list_vb_2,list_vb_3,list_vb_4,list_vb_5,list_vb_6,list_vb_7,list_vb_8,list_vb_9,list_vb_10,list_vb_11,list_vb_12,list_vb_13]
+#,list_vb_14]
+#,list_vb_15]
 
-print("h")
+#print('============bad 57=============')
+#print('bad 57%')
+#list_vb_1_temp = np.array(list_vb_1)
+#print("logs zips number")
+#print(sum(list_vb_1_temp[:,1]))
+#print("image number")
+#print(sum(list_vb_1_temp[:,2]))
+#print("xml")
+#print(sum(list_vb_1_temp[:,4]))
+#print('=============bad 12===========')
+#print('bad 12%')
+#list_vb_3_temp = np.array(list_vb_3)
+#print("logs zips number")
+#print(sum(list_vb_3_temp[:,1]))
+#print("image number")
+#print(sum(list_vb_3_temp[:,2]))
+#print("xml")
+#print(sum(list_vb_3_temp[:,4]))
+#print('===========================')
 
 for i,item in enumerate(list_vb):
     if len(item) == 0:
