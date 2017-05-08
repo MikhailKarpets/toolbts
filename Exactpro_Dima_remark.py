@@ -51,8 +51,8 @@ def filter_pattern(arr_pattern, text):
     for i, pattern in enumerate(arr_pattern):
         if pattern.search(temp_str):
             pattern_declaration = 'PATTERN %d' % i 
-            if i == 0:
-                print(pattern_declaration)
+#            if i == 0:
+#                print(pattern_declaration)
             if ( ((i > 8) and (i <= 19)) or (i == 27) or (i == 35) or (i == 40) ): #change i if number of stack-trace regex changes! 
                 stack_trace_flag = 1
             matches = pattern.findall(temp_str)
@@ -1065,7 +1065,14 @@ for item in list_of_all_projects_cleaned_bugs_descriptions_with_stack_trace_flag
 #16) бинарный массив STR 2122 target_steps_to_repr        6
 #17) бинарный массив EOB 2122 target_exp_obs_beh          7
 #18) бинарный массив ST 2122 ftr_stack_trace_list         8
-
+#19) list_of_lists_of_words_with_highest_tfidf
+#20) list_of_lists_of_words_with_highest_usual_frequensy
+    
+    
+    
+    
+    
+    
 print("IMAGES")
 print(len(ftr_im_list)) 
 print(sum(ftr_im_list))
@@ -1093,6 +1100,8 @@ mean_7 = np.mean(target_exp_obs_beh)
 std_7 = np.std(target_exp_obs_beh) 
 mean_8 = np.mean(ftr_stack_trace_list)    
 std_8 = np.std(ftr_stack_trace_list) 
+
+
     
 print("-------------------NEW FEATURES------------------") 
 list_of_vectorized_bugs_9 = list()
@@ -1138,30 +1147,346 @@ for i in range(2122):
     
     
 
-print("list_of_vectorized_bugs_9")
-print(len(list_of_vectorized_bugs_9))
+#print("list_of_vectorized_bugs_9")
+#print(len(list_of_vectorized_bugs_9))
 #print(list_of_vectorized_bugs_9)
 
 #АГГЛОМЕРАТИВНАЯ КЛАСТЕРИЗАЦИЯ (иерархическая?)    
 from sklearn.cluster import AgglomerativeClustering    
 
-AC_model = AgglomerativeClustering(n_clusters=14,linkage = 'complete', affinity = 'l1').fit(list_of_vectorized_bugs_9_norm_quantw_comm_verbs)
+AC_model = KMeans(n_clusters=14, random_state=7).fit(list_of_vectorized_bugs_9_norm_quantw_comm_verbs)
 labels_9 = AC_model.labels_
 #children_9 = AC_model.children_
 #n_leaves_9 = AC_model.n_leaves_
-print("Siluette index")
-print(metrics.silhouette_score(list_of_vectorized_bugs_9_norm_quantw_comm_verbs, labels_9))
+#print("Siluette index")
+#print(metrics.silhouette_score(list_of_vectorized_bugs_9_norm_quantw_comm_verbs, labels_9, metric = 'euclidean'))
 
 myset_9 = set(labels_9)
-print("myset_9")
-print(myset_9)
-print("labels_9")
-print(len(labels_9))
-print(labels_9)
+#print("myset_9")
+#print(myset_9)
+#print("labels_9")
+#print(len(labels_9))
+#print(labels_9)
 #print("n_leaves_9")
 #print(n_leaves_9)
 #print("children_9")
 #print(children_9)
+
+#create description of bugs from different clusters
+#with help of words with high tf-idf within this clusters
+#START
+corpus_90_all = list()
+for item in list_tokens_after_lem:
+    corpus_90_all.append(' '.join(item))
+
+#print('list_tokens_after_lem')
+#print(list_tokens_after_lem)    
+    
+corplist_vb_0 = list()
+corplist_vb_1 = list()
+corplist_vb_2 = list()
+corplist_vb_3 = list()
+corplist_vb_4 = list()
+corplist_vb_5 = list()
+corplist_vb_6 = list()
+corplist_vb_7 = list()
+corplist_vb_8 = list()
+corplist_vb_9 = list()
+corplist_vb_10 = list()
+corplist_vb_11 = list()
+corplist_vb_12 = list()
+corplist_vb_13 = list()
+corplist_vb_14 = list()
+corplist_vb_15 = list()
+for i,item in enumerate(labels_9):
+    if item == 0:
+        corplist_vb_0.append(corpus_90_all[i])
+    if item == 1:
+        corplist_vb_1.append(corpus_90_all[i])
+    if item == 2:
+        corplist_vb_2.append(corpus_90_all[i])    
+    if item == 3:
+        corplist_vb_3.append(corpus_90_all[i])    
+    if item == 4:
+        corplist_vb_4.append(corpus_90_all[i])    
+    if item == 5:
+        corplist_vb_5.append(corpus_90_all[i])    
+    if item == 6:
+        corplist_vb_6.append(corpus_90_all[i])    
+    if item == 7:
+        corplist_vb_7.append(corpus_90_all[i])    
+    if item == 8:
+        corplist_vb_8.append(corpus_90_all[i])    
+    if item == 9:
+        corplist_vb_9.append(corpus_90_all[i])    
+    if item == 10:
+        corplist_vb_10.append(corpus_90_all[i])    
+    if item == 11:
+        corplist_vb_11.append(corpus_90_all[i])    
+    if item == 12:
+        corplist_vb_12.append(corpus_90_all[i])
+    if item == 13:
+        corplist_vb_13.append(corpus_90_all[i])    
+    if item == 14:
+        corplist_vb_14.append(corpus_90_all[i])    
+    if item == 15:
+        corplist_vb_15.append(corpus_90_all[i])    
+    
+corplist = [corplist_vb_0, corplist_vb_1, corplist_vb_2, corplist_vb_3,
+            corplist_vb_4, corplist_vb_5, corplist_vb_6, corplist_vb_7,
+            corplist_vb_8, corplist_vb_9, corplist_vb_10, corplist_vb_11,
+            corplist_vb_12, corplist_vb_13]    
+
+freqcorplist_vb_0 = list()
+freqcorplist_vb_1 = list()
+freqcorplist_vb_2 = list()
+freqcorplist_vb_3 = list()
+freqcorplist_vb_4 = list()
+freqcorplist_vb_5 = list()
+freqcorplist_vb_6 = list()
+freqcorplist_vb_7 = list()
+freqcorplist_vb_8 = list()
+freqcorplist_vb_9 = list()
+freqcorplist_vb_10 = list()
+freqcorplist_vb_11 = list()
+freqcorplist_vb_12 = list()
+freqcorplist_vb_13 = list()
+freqcorplist_vb_14 = list()
+freqcorplist_vb_15 = list()
+
+list_of_lists_of_words_with_highest_tfidf = list()            
+list_of_lists_of_words_with_highest_usual_frequensy = list()
+
+for i,item in enumerate(labels_9):
+    if item == 0:
+        freqcorplist_vb_0.append(list_tokens_after_lem[i])
+    if item == 1:
+        freqcorplist_vb_1.append(list_tokens_after_lem[i])
+    if item == 2:
+        freqcorplist_vb_2.append(list_tokens_after_lem[i])    
+    if item == 3:
+        freqcorplist_vb_3.append(list_tokens_after_lem[i])    
+    if item == 4:
+        freqcorplist_vb_4.append(list_tokens_after_lem[i])    
+    if item == 5:
+        freqcorplist_vb_5.append(list_tokens_after_lem[i])    
+    if item == 6:
+        freqcorplist_vb_6.append(list_tokens_after_lem[i])    
+    if item == 7:
+        freqcorplist_vb_7.append(list_tokens_after_lem[i])    
+    if item == 8:
+        freqcorplist_vb_8.append(list_tokens_after_lem[i])    
+    if item == 9:
+        freqcorplist_vb_9.append(list_tokens_after_lem[i])    
+    if item == 10:
+        freqcorplist_vb_10.append(list_tokens_after_lem[i])    
+    if item == 11:
+        freqcorplist_vb_11.append(list_tokens_after_lem[i])    
+    if item == 12:
+        freqcorplist_vb_12.append(list_tokens_after_lem[i])
+    if item == 13:
+        freqcorplist_vb_13.append(list_tokens_after_lem[i])    
+    if item == 14:
+        freqcorplist_vb_14.append(list_tokens_after_lem[i])    
+    if item == 15:
+        freqcorplist_vb_15.append(list_tokens_after_lem[i])    
+
+temp_freq_list = [freqcorplist_vb_0, freqcorplist_vb_1,freqcorplist_vb_2,
+                  freqcorplist_vb_3,freqcorplist_vb_4,freqcorplist_vb_5,
+                  freqcorplist_vb_6,freqcorplist_vb_7,freqcorplist_vb_8,
+                  freqcorplist_vb_9,freqcorplist_vb_10,freqcorplist_vb_11,
+                  freqcorplist_vb_12,freqcorplist_vb_13]        
+
+for temp in temp_freq_list:                 
+    list_of_lists_of_words_with_highest_usual_frequensy.append( [item for sublist in temp for item in sublist])
+                
+from collections import defaultdict        
+from collections import Counter
+
+for i,item in enumerate(list_of_lists_of_words_with_highest_usual_frequensy):
+    list_of_lists_of_words_with_highest_usual_frequensy[i] = Counter(item)
+#---------------------------------------------------
+for i,item in enumerate(list_of_lists_of_words_with_highest_usual_frequensy):        
+    list_tuples_key_value0 = list()
+    for key, value in item.items():
+        list_tuples_key_value0.append( (key, value/len(item)) )
+    list_tuples_key_value0.sort(key=lambda tup: tup[1])
+    for k,v in enumerate(list_tuples_key_value0):
+        list_tuples_key_value0[k] = v[0]
+#    print(len(list_tuples_key_value0))
+    #setting quantity of words with highest usual frequency
+    list_of_lists_of_words_with_highest_usual_frequensy[i] = list_tuples_key_value0[-50:]    
+#---------------------------------------------------    
+    
+#print('list_of_lists_of_words_with_highest_usual_frequensy')
+#for item in list_of_lists_of_words_with_highest_usual_frequensy:
+#    print(item)
+#    print('============================================')
+            
+for corpus_90 in corplist:    
+    tf_90 = TfidfVectorizer(input=corpus_90, analyzer='word', ngram_range=(1,1),
+                         min_df = 0, smooth_idf=True)
+    #print(corpus_90)
+    tfidf_matrix_90 =  tf_90.fit_transform(corpus_90)
+    feature_names_90 = tf_90.get_feature_names()
+    
+    dict_tfidf_90 = list()
+    for doc in range(len(corpus_90)):
+        feature_index_90 = tfidf_matrix_90[doc,:].nonzero()[1]
+        tfidf_scores_90 = zip(feature_index_90, [tfidf_matrix_90[doc, x] for x in feature_index_90])
+    #    print('-----------------------------------GOOD TFIDF-------------------------')
+        temp_d_90 = dict()
+        for w, s in [(feature_names_90[i], s) for (i, s) in tfidf_scores_90]:
+    #        print((w,s))
+            temp_d_90.update([(w,s)])
+        dict_tfidf_90.append(temp_d_90)   
+        
+    intermediate = defaultdict(list)
+    
+    for subdict in dict_tfidf_90:
+        for key, value in subdict.items():
+            intermediate[key].append(value)
+    
+    # intermediate is now: defaultdict(list, {'a': [2, 1], 'b': [3, 4], 'c': [5]})
+    
+    list_tuples_key_value = list()
+    for key, value in intermediate.items():
+    #    print(key, sum(value)/len(value))
+        list_tuples_key_value.append( (key, np.median(value)) )
+    list_tuples_key_value.sort(key=lambda tup: tup[1])
+    for k,v in enumerate(list_tuples_key_value):
+        list_tuples_key_value[k] = v[0]
+#    print(len(list_tuples_key_value))
+    #setting quantity of words with highest tf-idf
+    list_of_lists_of_words_with_highest_tfidf.append(list_tuples_key_value[-50:]) 
+#    print('=================================')
+#    print(list_tuples_key_value)
+    #END
+
+#for item in list_of_lists_of_words_with_highest_tfidf:
+#    print(item)
+#    print('===========================================================')
+
+#10) массив количества слов 2122 word_quantity_list       0
+#11) бинарный массив 2122 логи/архивы ftr_logs_arch_list  1 
+#12) бинарный массив 2122 изображения ftr_im_list         2
+#13) массив кол-ва комментов 2122     num_comment_2122    3
+#14) бинарный массив 2122 xml     ftr_xml_list            4
+#15) массив долей глаголов 2122 ftr_VB_percentage_list    5
+#16) бинарный массив STR 2122 target_steps_to_repr        6
+#17) бинарный массив EOB 2122 target_exp_obs_beh          7
+#18) бинарный массив ST 2122 ftr_stack_trace_list         8
+#19) list_of_lists_of_words_with_highest_tfidf 14
+#20) list_of_lists_of_words_with_highest_usual_frequensy 14
+#21) binary_array_has_something 2122
+ 
+binary_array_has_something = list()
+for i in range(2122):
+    binary_array_has_something.append(target_steps_to_repr[i]+target_exp_obs_beh[i])
+                              
+for i,item in enumerate(binary_array_has_something):
+    if item > 1:
+        binary_array_has_something[i] = 1
+#print('binary_array_has_something')
+#print(len(binary_array_has_something))
+#print(binary_array_has_something)
+
+from sklearn import tree
+from sklearn.feature_selection import chi2
+from sklearn.feature_selection import SelectKBest
+
+#DT-----------------------------------------------------------------------start
+#tf12 = TfidfVectorizer(input=corpus_90_all, ngram_range=(1,1), smooth_idf=True, stop_words = 'english')
+#tfidf_matrix123 =  tf12.fit_transform(corpus_90_all)
+#tfidf_matrix12 = tfidf_matrix123.toarray()
+#feature_names = tf12.get_feature_names()
+#
+#
+##feature_names = tf12.get_feature_names()
+##print(len(feature_names))
+#
+#ch2 = SelectKBest(chi2, k=1500) #try to change that
+#X_train_12 = ch2.fit_transform(tfidf_matrix12, binary_array_has_something)
+#
+#print('X_train_12')
+#print(np.array(X_train_12).shape)
+#print(X_train_12)
+#
+#selected_features_numbers_of_col = list()
+#for key in np.asarray(tf12.get_feature_names())[ch2.get_support()]:
+#    selected_features_numbers_of_col.append((tf12.vocabulary_).get(key))
+#
+#
+#clf12 = tree.DecisionTreeClassifier(max_depth = 10, random_state = 42)
+#clf12.fit(X_train_12, binary_array_has_something)
+##print(clf12)
+# 
+#predicted12 = clf12.predict(X_train_12)
+## summarize the fit of the model
+#print(metrics.classification_report(binary_array_has_something, predicted12))
+#print(metrics.confusion_matrix(binary_array_has_something, predicted12))
+#print('-----------------------------------')
+#    
+#
+#import pydotplus
+#selected_terms_names = list()     
+#for item in selected_features_numbers_of_col:
+#    selected_terms_names.append(feature_names[item])
+#    
+##print('WHAT HAPPENS==============================================')
+##print('selected_terms_names')
+##print(len(selected_terms_names))
+##print(selected_terms_names)
+#
+##clf00 = tree.DecisionTreeClassifier(random_state = 42)
+##clf00.fit([[1,2,3],[4,5,6],[7,8,9]], [0,1,0])
+##dot_data00 = tree.export_graphviz(clf00, out_file=None,
+##                                feature_names = ['one','two','three'],
+##                                class_names = ["bad","good"],
+##                                filled = True,rounded  = True)
+##graph00 = pydotplus.graph_from_dot_data(dot_data00)
+##print(dot_data00)
+##print('\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\') 
+##print(graph00.get_node_list())
+##print(graph00.get_edge_list())
+##graph00.write_pdf("F:\\mike\\hse\\sem_2\\exactpro\\clustering\\TREE_2.pdf")
+#
+#
+#
+#dot_data = tree.export_graphviz(clf12, out_file=None,
+#                                feature_names = selected_terms_names,
+#                                class_names = ["'zero'","'one'"],
+#                                filled = True,rounded  = True)
+#graph = pydotplus.graph_from_dot_data(dot_data)
+#print(dot_data)
+#print('\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\') 
+##print(graph.get_node_list())
+##print(graph.get_edge_list())
+#graph.write_pdf("F:\\mike\\hse\\sem_2\\exactpro\\clustering\\TREE_3.pdf")
+#DT-----------------------------------------------------------------------start
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
 
 list_vb_0 = list()
 list_vb_1 = list()
@@ -1237,20 +1562,763 @@ list_vb = [list_vb_0,list_vb_1,list_vb_2,list_vb_3,list_vb_4,list_vb_5,list_vb_6
 #print(sum(list_vb_3_temp[:,4]))
 #print('===========================')
 
+#for i,item in enumerate(list_vb):
+#    if len(item) == 0:
+#        print(i)
+#        print("no bugs in this cluster")
+#        continue
+#    print("-------CLUSTER-----------")
+#    print(i)  
+#    for j in range(9):
+#        print(j)
+##        print(item)
+##        print("median")
+#        temp_item = np.array(item)
+#        temp_AC = temp_item[:,j]
+#        print(np.median(temp_AC))
+#
+#count_0 = 0
+#count_1 = 0
+#count_2 = 0
+#count_3 = 0
+#count_4 = 0        
+#count_5 = 0
+#count_6 = 0
+#count_7 = 0
+#count_8 = 0
+#count_9 = 0
+#count_10 = 0
+#count_11 = 0
+#count_12 = 0
+#count_13 = 0
+#count_14 = 0        
+#count_15 = 0
+#for i in labels_9:
+#    if i == 0:
+#        count_0 += 1
+#    if i == 1:
+#        count_1 += 1
+#    if i == 2:
+#        count_2 += 1
+#    if i == 3:
+#        count_3 += 1
+#    if i == 4:
+#        count_4 += 1
+#    if i == 5:
+#        count_5 += 1
+#    if i == 6:
+#        count_6 += 1
+#    if i == 7:
+#        count_7 += 1
+#    if i == 8:
+#        count_8 += 1
+#    if i == 9:
+#        count_9 += 1
+#    if i == 10:
+#        count_10 += 1
+#    if i == 11:
+#        count_11 += 1
+#    if i == 12:
+#        count_12 += 1
+#    if i == 13:
+#        count_13 += 1
+#    if i == 14:
+#        count_14 += 1
+#    if i == 15:
+#        count_15 += 1
+##        
+#print("0--")
+#print(count_0)        
+#print("1--")
+#print(count_1)
+#print("2--")
+#print(count_2)        
+#print("3--")
+#print(count_3)
+#print("4--")
+#print(count_4)        
+#print("5--")
+#print(count_5)
+#print("6--")
+#print(count_6)        
+#print("7--")
+#print(count_7)
+#print("8--")
+#print(count_8)        
+#print("9--")
+#print(count_9)
+#print("10--")
+#print(count_10)        
+#print("11--")
+#print(count_11)
+#print("12--")
+#print(count_12)        
+#print("13--")
+#print(count_13)
+#print("14--")
+#print(count_14)        
+#print("15--")
+#print(count_15)
+#
+#print("------------------------")
+
+
+#======================================================================================
+#======================================================================================
+#======================================================================================
+#======================================================================================
+#new clust with frequent terms from clusters
+def contain_freq_words_from_clust(list_to_check, list_with_freq_words, conf_level):
+    freq_counter = 0.0
+    n = len(list_to_check)
+    if n == 0:
+        return False
+    for item in list_to_check:
+        if item in list_with_freq_words:
+            freq_counter = freq_counter + 1
+    if (freq_counter/n > conf_level):
+        return True
+    else:
+        return False
+
+def contain_zip_log_im_xml(list_to_check, list_of_chain_words):
+    n = len(list_to_check)
+    if n == 0:
+        return False
+    return set(list_to_check).issuperset(set(list_of_chain_words))
+
+def contain_str_eob(list_to_check, list_of_chain_words):
+    n = len(list_to_check)
+    if n == 0:
+        return False
+    return set(list_to_check).issuperset(set(list_of_chain_words))        
+
+
+list_contain_zlix_0 = list()
+list_contain_zlix_1 = list()
+list_contain_zlix_2 = list()
+list_contain_zlix_3 = list()
+list_contain_zlix_4 = list()
+list_contain_zlix_5 = list()
+list_contain_zlix_6 = list()
+list_contain_zlix_7 = list()
+list_contain_zlix_8 = list()
+list_contain_zlix_9 = list()
+list_contain_zlix_10 = list()
+list_contain_zlix_11 = list()
+list_contain_zlix_12 = list()
+list_contain_zlix_13 = list()
+list_contain_zlix_14 = list()
+list_contain_zlix_15 = list()
+list_contain_zlix_16 = list()
+list_contain_zlix_17 = list()
+list_contain_zlix_18 = list()
+list_contain_zlix_19 = list()
+list_contain_zlix_20 = list()
+list_contain_zlix_21 = list()
+list_contain_zlix_22 = list()
+list_contain_zlix_23 = list()
+list_contain_zlix_24 = list()
+list_contain_zlix_25 = list()
+
+pat_zlix_0 = ['attached','following','file','deployment','fails','similar',
+              'receives','jconsole','start','logged']
+pat_zlix_1 = ['attached','start']
+pat_zlix_2 = ['attached','shot']
+pat_zlix_3 = ['attached','configuration']
+pat_zlix_4 = ['following','deployment']
+pat_zlix_5 = ['following','dependency']
+pat_zlix_6 = ['following','trying']
+pat_zlix_7 = ['following','configuration']
+pat_zlix_8 = ['following','producer']
+pat_zlix_9 = ['following','directory']
+pat_zlix_10 = ['following','library']
+pat_zlix_11 = ['file','broker']
+pat_zlix_12 = ['file','deploy']
+pat_zlix_13 = ['file','element']
+pat_zlix_14 = ['file','web']
+pat_zlix_15 = ['file','server']
+pat_zlix_16 = ['deployment','like']
+pat_zlix_17 = ['deployment','archived']
+pat_zlix_18 = ['deployment','according']
+pat_zlix_19 = ['fails','intermittently']
+pat_zlix_20 = ['fails','configuration']
+pat_zlix_21 = ['fails','branch']
+pat_zlix_22 = ['fails','client']
+pat_zlix_23 = ['fails','test']
+pat_zlix_24 = ['fails','directory']
+pat_zlix_25 = ['logged']
+
+for i in range(2122):
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_0):
+        list_contain_zlix_0.append(1)
+    else:
+        list_contain_zlix_0.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_1):
+        list_contain_zlix_1.append(1)
+    else:
+        list_contain_zlix_1.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_2):
+        list_contain_zlix_2.append(1)
+    else:
+        list_contain_zlix_2.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_3):
+        list_contain_zlix_3.append(1)
+    else:
+        list_contain_zlix_3.append(0)        
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_4):
+        list_contain_zlix_4.append(1)
+    else:
+        list_contain_zlix_4.append(0)       
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_5):
+        list_contain_zlix_5.append(1)
+    else:
+        list_contain_zlix_5.append(0)       
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_6):
+        list_contain_zlix_6.append(1)
+    else:
+        list_contain_zlix_6.append(0)       
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_7):
+        list_contain_zlix_7.append(1)
+    else:
+        list_contain_zlix_7.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_8):
+        list_contain_zlix_8.append(1)
+    else:
+        list_contain_zlix_8.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_9):
+        list_contain_zlix_9.append(1)
+    else:
+        list_contain_zlix_9.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_10):
+        list_contain_zlix_10.append(1)
+    else:
+        list_contain_zlix_10.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_11):
+        list_contain_zlix_11.append(1)
+    else:
+        list_contain_zlix_11.append(0)    
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_12):
+        list_contain_zlix_12.append(1)
+    else:
+        list_contain_zlix_12.append(0)    
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_13):
+        list_contain_zlix_13.append(1)
+    else:
+        list_contain_zlix_13.append(0)    
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_14):
+        list_contain_zlix_14.append(1)
+    else:
+        list_contain_zlix_14.append(0)       
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_15):
+        list_contain_zlix_15.append(1)
+    else:
+        list_contain_zlix_15.append(0)       
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_16):
+        list_contain_zlix_16.append(1)
+    else:
+        list_contain_zlix_16.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_17):
+        list_contain_zlix_17.append(1)
+    else:
+        list_contain_zlix_17.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_18):
+        list_contain_zlix_18.append(1)
+    else:
+        list_contain_zlix_18.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_19):
+        list_contain_zlix_19.append(1)
+    else:
+        list_contain_zlix_19.append(0)
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_20):
+        list_contain_zlix_20.append(1)
+    else:
+        list_contain_zlix_20.append(0)    
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_21):
+        list_contain_zlix_21.append(1)
+    else:
+        list_contain_zlix_21.append(0)    
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_22):
+        list_contain_zlix_22.append(1)
+    else:
+        list_contain_zlix_22.append(0)  
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_23):
+        list_contain_zlix_23.append(1)
+    else:
+        list_contain_zlix_23.append(0)    
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_24):
+        list_contain_zlix_24.append(1)
+    else:
+        list_contain_zlix_24.append(0)    
+    if contain_zip_log_im_xml(list_tokens_after_lem[i],pat_zlix_25):
+        list_contain_zlix_25.append(1)
+    else:
+        list_contain_zlix_25.append(0)
+
+
+list_contain_str_eob_0 = list()        
+list_contain_str_eob_1 = list()
+list_contain_str_eob_2 = list()        
+list_contain_str_eob_3 = list()        
+list_contain_str_eob_4 = list()
+list_contain_str_eob_5 = list()
+list_contain_str_eob_6 = list()
+list_contain_str_eob_7 = list()
+list_contain_str_eob_8 = list()        
+list_contain_str_eob_9 = list()        
+list_contain_str_eob_10 = list()
+list_contain_str_eob_11 = list()
+list_contain_str_eob_12 = list()
+list_contain_str_eob_13 = list()
+list_contain_str_eob_14 = list()        
+list_contain_str_eob_15 = list()
+list_contain_str_eob_16 = list() 
+
+pat_str_eob_0 = ['reproduce','expected','click','start','usecase','websphere',
+                 'topic','choose','increase','owner']
+pat_str_eob_1 = ['reproduce','step']                 
+pat_str_eob_2 = ['reproduce','step','result']
+pat_str_eob_3 = ['reproduce','directory']
+pat_str_eob_4 = ['reproduce','command','using']
+pat_str_eob_5 = ['reproduce','login']
+pat_str_eob_6 = ['reproduce','restart']
+pat_str_eob_7 = ['reproduce','click']
+pat_str_eob_8 = ['expected','actual']
+pat_str_eob_9 = ['start','stop']
+pat_str_eob_10 = ['start','problem']
+pat_str_eob_11 = ['start','note']
+pat_str_eob_12 = ['start','connect','command']
+pat_str_eob_13 = ['choose','jboss']
+pat_str_eob_14 = ['choose','qa']
+pat_str_eob_15 = ['increase','store']
+pat_str_eob_16 = ['reproduce','following','expected','start','click','file'] #common for both str_eob and zlix
+
+
+for i in range(2122):
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_0):
+        list_contain_str_eob_0.append(1)
+    else:
+        list_contain_str_eob_0.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_1):
+        list_contain_str_eob_1.append(1)
+    else:
+        list_contain_str_eob_1.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_2):
+        list_contain_str_eob_2.append(1)
+    else:
+        list_contain_str_eob_2.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_3):
+        list_contain_str_eob_3.append(1)
+    else:
+        list_contain_str_eob_3.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_4):
+        list_contain_str_eob_4.append(1)
+    else:
+        list_contain_str_eob_4.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_5):
+        list_contain_str_eob_5.append(1)
+    else:
+        list_contain_str_eob_5.append(0)    
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_6):
+        list_contain_str_eob_6.append(1)
+    else:
+        list_contain_str_eob_6.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_7):
+        list_contain_str_eob_7.append(1)
+    else:
+        list_contain_str_eob_7.append(0)    
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_8):
+        list_contain_str_eob_8.append(1)
+    else:
+        list_contain_str_eob_8.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_9):
+        list_contain_str_eob_9.append(1)
+    else:
+        list_contain_str_eob_9.append(0)    
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_10):
+        list_contain_str_eob_10.append(1)
+    else:
+        list_contain_str_eob_10.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_11):
+        list_contain_str_eob_11.append(1)
+    else:
+        list_contain_str_eob_11.append(0)    
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_12):
+        list_contain_str_eob_12.append(1)
+    else:
+        list_contain_str_eob_12.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_13):
+        list_contain_str_eob_13.append(1)
+    else:
+        list_contain_str_eob_13.append(0)    
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_14):
+        list_contain_str_eob_14.append(1)
+    else:
+        list_contain_str_eob_14.append(0)
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_15):
+        list_contain_str_eob_15.append(1)
+    else:
+        list_contain_str_eob_15.append(0)    
+    if contain_str_eob(list_tokens_after_lem[i],pat_str_eob_16):
+        list_contain_str_eob_16.append(1)
+    else:
+        list_contain_str_eob_16.append(0)    
+        
+        
+        
+        
+list_contain_freq_words_from_clust_0 = list()
+list_contain_freq_words_from_clust_1 = list()
+list_contain_freq_words_from_clust_2 = list()
+list_contain_freq_words_from_clust_3 = list()
+list_contain_freq_words_from_clust_4 = list()
+list_contain_freq_words_from_clust_5 = list()
+list_contain_freq_words_from_clust_6 = list()
+list_contain_freq_words_from_clust_7 = list()
+list_contain_freq_words_from_clust_8 = list()
+list_contain_freq_words_from_clust_9 = list()
+list_contain_freq_words_from_clust_10 = list()
+list_contain_freq_words_from_clust_11 = list()
+list_contain_freq_words_from_clust_12 = list()
+list_contain_freq_words_from_clust_13 = list()
+
+perc_temp = 0.1
+for i in range(2122):
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[0],perc_temp):
+        list_contain_freq_words_from_clust_0.append(1)
+    else:
+        list_contain_freq_words_from_clust_0.append(0)
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[1],perc_temp):
+        list_contain_freq_words_from_clust_1.append(1)
+    else:
+        list_contain_freq_words_from_clust_1.append(0)
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[2],perc_temp):
+        list_contain_freq_words_from_clust_2.append(1)
+    else:
+        list_contain_freq_words_from_clust_2.append(0)
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[3],perc_temp):
+        list_contain_freq_words_from_clust_3.append(1)
+    else:
+        list_contain_freq_words_from_clust_3.append(0)        
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[4],perc_temp):
+        list_contain_freq_words_from_clust_4.append(1)
+    else:
+        list_contain_freq_words_from_clust_4.append(0)       
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[5],perc_temp):
+        list_contain_freq_words_from_clust_5.append(1)
+    else:
+        list_contain_freq_words_from_clust_5.append(0)       
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[6],perc_temp):
+        list_contain_freq_words_from_clust_6.append(1)
+    else:
+        list_contain_freq_words_from_clust_6.append(0)       
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[7],perc_temp):
+        list_contain_freq_words_from_clust_7.append(1)
+    else:
+        list_contain_freq_words_from_clust_7.append(0)
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[8],perc_temp):
+        list_contain_freq_words_from_clust_8.append(1)
+    else:
+        list_contain_freq_words_from_clust_8.append(0)
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[9],perc_temp):
+        list_contain_freq_words_from_clust_9.append(1)
+    else:
+        list_contain_freq_words_from_clust_9.append(0)
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[10],perc_temp):
+        list_contain_freq_words_from_clust_10.append(1)
+    else:
+        list_contain_freq_words_from_clust_10.append(0)
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[11],perc_temp):
+        list_contain_freq_words_from_clust_11.append(1)
+    else:
+        list_contain_freq_words_from_clust_11.append(0)    
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[12],perc_temp):
+        list_contain_freq_words_from_clust_12.append(1)
+    else:
+        list_contain_freq_words_from_clust_12.append(0)    
+    if contain_freq_words_from_clust(list_tokens_after_lem[i],
+                                        list_of_lists_of_words_with_highest_tfidf[13],perc_temp):
+        list_contain_freq_words_from_clust_13.append(1)
+    else:
+        list_contain_freq_words_from_clust_13.append(0)    
+
+java_code_vector = [] 
+file = open('F:\\mike\\hse\\sem_2\\exactpro\\clustering\\java_code.txt') 
+for line in file:
+    java_code_vector.append(int(line))
+
+#print('JAVA CODE')
+#print(java_code_vector)
+        
+list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW = list()
+list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print = list()
+for i in range(2122):
+    list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW.append([ word_quantity_list_0_1[i],
+                                    ftr_logs_arch_list[i],
+                                    ftr_im_list[i],
+                                    num_comment_2122_0_1[i],
+                                    ftr_xml_list[i],
+                                    ftr_VB_percentage_list_0_1[i],
+                                    target_steps_to_repr[i],
+                                    target_exp_obs_beh[i],
+                                    ftr_stack_trace_list[i],
+                                    java_code_vector[i],
+                                    list_contain_freq_words_from_clust_0[i],
+                                    list_contain_freq_words_from_clust_2[i],
+                                    list_contain_freq_words_from_clust_3[i],
+                                    list_contain_freq_words_from_clust_5[i],
+                                    list_contain_freq_words_from_clust_6[i],
+                                    list_contain_freq_words_from_clust_7[i],
+                                    list_contain_freq_words_from_clust_8[i],
+                                    list_contain_freq_words_from_clust_9[i],
+                                    list_contain_freq_words_from_clust_10[i],
+                                    list_contain_freq_words_from_clust_11[i],
+                                    list_contain_freq_words_from_clust_12[i],
+                                    list_contain_freq_words_from_clust_13[i],
+                                    list_contain_zlix_0[i],
+                                    list_contain_zlix_1[i],
+                                    list_contain_zlix_2[i],
+                                    list_contain_zlix_3[i],
+                                    list_contain_zlix_4[i],
+                                    list_contain_zlix_5[i],
+                                    list_contain_zlix_6[i],
+                                    list_contain_zlix_7[i],
+                                    list_contain_zlix_8[i],
+                                    list_contain_zlix_9[i],
+                                    list_contain_zlix_10[i],
+                                    list_contain_zlix_11[i],
+                                    list_contain_zlix_12[i],
+                                    list_contain_zlix_13[i],
+                                    list_contain_zlix_14[i],
+                                    list_contain_zlix_15[i],
+                                    list_contain_zlix_16[i],
+                                    list_contain_zlix_17[i],
+                                    list_contain_zlix_18[i],
+                                    list_contain_zlix_19[i],
+                                    list_contain_zlix_20[i],
+                                    list_contain_zlix_21[i],
+                                    list_contain_zlix_22[i],
+                                    list_contain_zlix_23[i],
+                                    list_contain_zlix_24[i],
+                                    list_contain_zlix_25[i],
+                                    list_contain_str_eob_0[i],        
+                                    list_contain_str_eob_1[i],
+                                    list_contain_str_eob_2[i],        
+                                    list_contain_str_eob_3[i],        
+                                    list_contain_str_eob_4[i],
+                                    list_contain_str_eob_5[i],
+                                    list_contain_str_eob_6[i],
+                                    list_contain_str_eob_7[i],
+                                    list_contain_str_eob_8[i],        
+                                    list_contain_str_eob_9[i],        
+                                    list_contain_str_eob_10[i],
+                                    list_contain_str_eob_11[i],
+                                    list_contain_str_eob_12[i],
+                                    list_contain_str_eob_13[i],
+                                    list_contain_str_eob_14[i],        
+                                    list_contain_str_eob_15[i],
+                                    list_contain_str_eob_16[i] 
+                                    ])
+    list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print.append([ word_quantity_list[i],
+                                    ftr_logs_arch_list[i],
+                                    ftr_im_list[i],
+                                    num_comment_2122[i],
+                                    ftr_xml_list[i],
+                                    ftr_VB_percentage_list[i],
+                                    target_steps_to_repr[i],
+                                    target_exp_obs_beh[i],
+                                    ftr_stack_trace_list[i],
+                                    java_code_vector[i],
+                                    list_contain_freq_words_from_clust_0[i],
+                                    list_contain_freq_words_from_clust_2[i],
+                                    list_contain_freq_words_from_clust_3[i],
+                                    list_contain_freq_words_from_clust_5[i],
+                                    list_contain_freq_words_from_clust_6[i],
+                                    list_contain_freq_words_from_clust_7[i],
+                                    list_contain_freq_words_from_clust_8[i],
+                                    list_contain_freq_words_from_clust_9[i],
+                                    list_contain_freq_words_from_clust_10[i],
+                                    list_contain_freq_words_from_clust_11[i],
+                                    list_contain_freq_words_from_clust_12[i],
+                                    list_contain_freq_words_from_clust_13[i],
+                                    list_contain_zlix_0[i],
+                                    list_contain_zlix_1[i],
+                                    list_contain_zlix_2[i],
+                                    list_contain_zlix_3[i],
+                                    list_contain_zlix_4[i],
+                                    list_contain_zlix_5[i],
+                                    list_contain_zlix_6[i],
+                                    list_contain_zlix_7[i],
+                                    list_contain_zlix_8[i],
+                                    list_contain_zlix_9[i],
+                                    list_contain_zlix_10[i],
+                                    list_contain_zlix_11[i],
+                                    list_contain_zlix_12[i],
+                                    list_contain_zlix_13[i],
+                                    list_contain_zlix_14[i],
+                                    list_contain_zlix_15[i],
+                                    list_contain_zlix_16[i],
+                                    list_contain_zlix_17[i],
+                                    list_contain_zlix_18[i],
+                                    list_contain_zlix_19[i],
+                                    list_contain_zlix_20[i],
+                                    list_contain_zlix_21[i],
+                                    list_contain_zlix_22[i],
+                                    list_contain_zlix_23[i],
+                                    list_contain_zlix_24[i],
+                                    list_contain_zlix_25[i],
+                                    list_contain_str_eob_0[i],        
+                                    list_contain_str_eob_1[i],
+                                    list_contain_str_eob_2[i],        
+                                    list_contain_str_eob_3[i],        
+                                    list_contain_str_eob_4[i],
+                                    list_contain_str_eob_5[i],
+                                    list_contain_str_eob_6[i],
+                                    list_contain_str_eob_7[i],
+                                    list_contain_str_eob_8[i],        
+                                    list_contain_str_eob_9[i],        
+                                    list_contain_str_eob_10[i],
+                                    list_contain_str_eob_11[i],
+                                    list_contain_str_eob_12[i],
+                                    list_contain_str_eob_13[i],
+                                    list_contain_str_eob_14[i],        
+                                    list_contain_str_eob_15[i],
+                                    list_contain_str_eob_16[i]
+                                    ])
+
+AC_model = KMeans(n_clusters=18, random_state=7).fit(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW)
+labels_12 = AC_model.labels_
+
+print("Siluette index")
+print(metrics.silhouette_score(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW,
+                               labels_12, metric = 'euclidean'))
+
+myset_12 = set(labels_12)
+print("myset_12")
+print(myset_12)
+#print("labels_12")
+#print(len(labels_12))
+#print(labels_12)
+
+list_vb_0 = list()
+list_vb_1 = list()
+list_vb_2 = list()
+list_vb_3 = list()
+list_vb_4 = list()
+list_vb_5 = list()
+list_vb_6 = list()
+list_vb_7 = list()
+list_vb_8 = list()
+list_vb_9 = list()
+list_vb_10 = list()
+list_vb_11 = list()
+list_vb_12 = list()
+list_vb_13 = list()
+list_vb_14 = list()
+list_vb_15 = list()
+list_vb_16 = list()
+list_vb_17 = list()
+list_vb_18 = list()
+list_vb_19 = list()
+
+for i,item in enumerate(labels_12):
+    if item == 0:
+        list_vb_0.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])
+    if item == 1:
+        list_vb_1.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])
+    if item == 2:
+        list_vb_2.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 3:
+        list_vb_3.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 4:
+        list_vb_4.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 5:
+        list_vb_5.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 6:
+        list_vb_6.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 7:
+        list_vb_7.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 8:
+        list_vb_8.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 9:
+        list_vb_9.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 10:
+        list_vb_10.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 11:
+        list_vb_11.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 12:
+        list_vb_12.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])
+    if item == 13:
+        list_vb_13.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 14:
+        list_vb_14.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 15:
+        list_vb_15.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 16:
+        list_vb_16.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 17:
+        list_vb_17.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])
+    if item == 18:
+        list_vb_18.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+    if item == 19:
+        list_vb_19.append(list_of_vectorized_bugs_9_norm_quantw_comm_verbs_NEW_for_print[i])    
+                
+        
+list_vb = [list_vb_0,list_vb_1,list_vb_2,list_vb_3,list_vb_4,list_vb_5,list_vb_6,list_vb_7,list_vb_8,list_vb_9,list_vb_10,
+           list_vb_11,list_vb_12,list_vb_13,list_vb_14,list_vb_15,list_vb_16,
+           list_vb_17,list_vb_18,list_vb_19]
+#,list_vb_14]
+#,list_vb_15]
+
+#print('============bad 57=============')
+#print('bad 57%')
+#list_vb_1_temp = np.array(list_vb_1)
+#print("logs zips number")
+#print(sum(list_vb_1_temp[:,1]))
+#print("image number")
+#print(sum(list_vb_1_temp[:,2]))
+#print("xml")
+#print(sum(list_vb_1_temp[:,4]))
+#print('=============bad 12===========')
+#print('bad 12%')
+#list_vb_3_temp = np.array(list_vb_3)
+#print("logs zips number")
+#print(sum(list_vb_3_temp[:,1]))
+#print("image number")
+#print(sum(list_vb_3_temp[:,2]))
+#print("xml")
+#print(sum(list_vb_3_temp[:,4]))
+#print('===========================')
+
 for i,item in enumerate(list_vb):
     if len(item) == 0:
         print(i)
         print("no bugs in this cluster")
         continue
+#    if i > 15: 
+#        break
     print("-------CLUSTER-----------")
     print(i)  
-    for j in range(9):
-        print(j)
+    for j in range(65):
+        print(j) #CHANGE IT
 #        print(item)
 #        print("median")
         temp_item = np.array(item)
         temp_AC = temp_item[:,j]
-        print(np.median(temp_AC))
+        print('%f(%f)' % (np.median(temp_AC), np.sum(temp_AC)/len(temp_AC)))      #CHANGE IT
 
 count_0 = 0
 count_1 = 0
@@ -1268,7 +2336,11 @@ count_12 = 0
 count_13 = 0
 count_14 = 0        
 count_15 = 0
-for i in labels_9:
+count_16 = 0
+count_17 = 0
+count_18 = 0
+count_19 = 0
+for i in labels_12:
     if i == 0:
         count_0 += 1
     if i == 1:
@@ -1301,6 +2373,17 @@ for i in labels_9:
         count_14 += 1
     if i == 15:
         count_15 += 1
+    if i == 16:
+        count_16 += 1
+    if i == 17:
+        count_17 += 1
+    if i == 18:
+        count_18 += 1
+    if i == 19:
+        count_19 += 1
+  
+        
+        
 #        
 print("0--")
 print(count_0)        
@@ -1334,8 +2417,31 @@ print("14--")
 print(count_14)        
 print("15--")
 print(count_15)
+print("16--")
+print(count_16)
+print("17--")
+print(count_17)        
+print("18--")
+print(count_18)
+print("19--")
+print(count_19)        
 
 print("------------------------")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #for i in labels_9:
 #    print(i)
