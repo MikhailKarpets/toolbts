@@ -3,7 +3,7 @@
 Quality assessment of defect reports in bug-tracking system с компанией Exactpro (https://exactpro.com/ru).
 
 Файлы:
-course_work.docx - подробное описание курсовой работы
+course_work.docx - подробное описание курсовой работы;
 raw_code.py - исследовательский код (неоформленный)
 
 Ниже приведено краткое описание моей работы.
