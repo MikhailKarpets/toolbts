@@ -1,6 +1,6 @@
 # toolbts
 Данный набор файлов представляет собой результат моего участия в курсовом проекте на тему 
-Quality assessment of defect reports in bug-tracking system с компанией Exactpro (https://exactpro.com/ru).
+"Оценка качества отчетов о дефектах программного обеспечения в системах отслеживания ошибок" с компанией Exactpro (https://exactpro.com/ru).
 
 Файлы:
 course_work.docx - подробное описание курсовой работы;
